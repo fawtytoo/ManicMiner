@@ -1,0 +1,2 @@
+# ManicMiner
+Manic Miner
