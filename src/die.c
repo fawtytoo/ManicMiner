@@ -1,0 +1,56 @@
+#include "common.h"
+#include "video.h"
+#include "system.h"
+#include "game.h"
+#include "audio.h"
+
+WORD    dieBlank[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+int     dieLevel;
+
+void DoDieDrawer()
+{
+    Video_LevelInkFill(dieLevel >> 1);
+    Game_AirDraw(); // allows the air bar to catch up if necessary
+}
+
+void DoDieTicker()
+{
+    if (dieLevel-- > 0)
+    {
+        return;
+    }
+
+    if (gameLives == 0)
+    {
+        Action = Gameover_Action;
+        return;
+    }
+
+    Video_Sprite(LIVES + (gameLives - 1) * 16, dieBlank, 0x0, 0x0); // blank frame
+
+    Action = Game_Action;
+}
+
+void DoDieInit()
+{
+    gameLives--;
+
+    dieLevel = 15; // make each colour last 2 frames
+
+    Video_LevelPaperFill(0x0);
+    System_Border(0x0);
+    Audio_Sfx(SFX_DIE);
+
+    Ticker = DoDieTicker;
+}
+
+void Die_Action()
+{
+    Responder = DoNothing;
+    Ticker = DoDieInit;
+    Drawer = DoDieDrawer;
+    Flasher = DoNothing;
+
+    Action = DoNothing;
+}
