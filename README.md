@@ -32,8 +32,7 @@ Some subtle improvements have been made to make the game more enjoyable:
 - 2 replacement character set fonts; one small, one large.
 - The piano keyboard on the title screen has been corrected.
 - The title screen has been redrawn in places for a more balanced look.
-- The original music data cannot be used, but both the title and in-game music
-scores have been reproduced and are polyphonic.
+- The title and in-game music scores have been reproduced and are polyphonic.
 - The sound effects are approximately the same as in the original game and
 include stereo panning effects.
 - To give the music and sound effects a retro feel, a square wave generator is
