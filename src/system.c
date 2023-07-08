@@ -2,16 +2,11 @@
 
 #include "misc.h"
 
-#include "system.h"
-
-void (*Callback)(short *, int);
-
 SDL_Window          *sdlWindow;
 SDL_Renderer        *sdlRenderer;
 SDL_Texture         *sdlTexture, *sdlTarget;
 SDL_Rect            sdlViewport;
 SDL_AudioDeviceID   sdlAudio;
-SDL_Color           borderColour;
 
 const BYTE          *keyState;
 
@@ -148,9 +143,7 @@ void System_SetPixel(int point, int index)
 
 void System_Border(int index)
 {
-    borderColour.r = videoPalette[index] >> 16;
-    borderColour.g = videoPalette[index] >> 8;
-    borderColour.b = videoPalette[index];
+    SDL_SetRenderDrawColor(sdlRenderer, videoPalette[index] >> 16, (videoPalette[index] >> 8) & 0xff, videoPalette[index] & 0xff, 0xff);
 }
 
 void System_LockVideo()
@@ -167,7 +160,6 @@ void System_UpdateVideo()
 {
     int frames;
 
-    SDL_SetRenderDrawColor(sdlRenderer, borderColour.r, borderColour.g, borderColour.b, 0xff);
     SDL_RenderClear(sdlRenderer);
     SDL_SetRenderTarget(sdlRenderer, sdlTarget);
     SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
