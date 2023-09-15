@@ -13,7 +13,9 @@ const BYTE          *keyState;
 UINT                *texPixels;
 int                 texPitch;
 
-TIMER               timerDupe;
+// 1000ms / 60hz = 16⅔
+//  ... or (1000ms * 3) / 60hz = 50
+UINT                timerNow, timerInterval = 50;
 
 void System_LockAudio()
 {
@@ -158,19 +160,18 @@ void System_UnlockVideo()
 
 void System_UpdateVideo()
 {
-    int frames;
+    timerNow += timerInterval;
+    while (timerNow > SDL_GetTicks() * 3)
+    {
+        SDL_Delay(1);
+    }
 
     SDL_RenderClear(sdlRenderer);
     SDL_SetRenderTarget(sdlRenderer, sdlTarget);
     SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
     SDL_SetRenderTarget(sdlRenderer, NULL);
-
-    frames = Timer_Update(&timerDupe);
-    while (frames--)
-    {
-        SDL_RenderCopy(sdlRenderer, sdlTarget, NULL, &sdlViewport);
-        SDL_RenderPresent(sdlRenderer);
-    }
+    SDL_RenderCopy(sdlRenderer, sdlTarget, NULL, &sdlViewport);
+    SDL_RenderPresent(sdlRenderer);
 }
 
 void System_Quit()
@@ -196,19 +197,11 @@ void System_Init()
     SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
 
     SDL_GetDesktopDisplayMode(0, &mode);
-    if (mode.refresh_rate > TICKRATE)
-    {
-        Timer_Set(&timerDupe, mode.refresh_rate, TICKRATE);
-    }
-    else
-    {
-        Timer_Set(&timerDupe, TICKRATE, TICKRATE);
-    }
 
     multiply = Video_Viewport(mode.w, mode.h, &sdlViewport.x, &sdlViewport.y, &sdlViewport.w, &sdlViewport.h);
 
     sdlWindow = SDL_CreateWindow("Manic Miner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_ACCELERATED);
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     sdlTarget = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WIDTH * multiply, HEIGHT * multiply);
@@ -226,4 +219,6 @@ void System_Init()
     SDL_PauseAudioDevice(sdlAudio, 0);
 
     keyState = SDL_GetKeyboardState(NULL);
+
+    timerNow = SDL_GetTicks() * 3;
 }
