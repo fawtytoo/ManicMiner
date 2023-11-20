@@ -12,3 +12,4 @@ int System_IsKeyJump(void);
 void System_UpdateKeys(void);
 void System_LockAudio(void);
 void System_UnlockAudio(void);
+int System_GetTime(void);

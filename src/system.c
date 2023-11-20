@@ -13,9 +13,12 @@ const BYTE          *keyState;
 UINT                *texPixels;
 int                 texPitch;
 
-// 1000ms / 60hz = 16⅔
-//  ... or (1000ms * 3) / 60hz = 50
-UINT                timerNow, timerInterval = 50;
+int System_GetTime()
+{
+    SDL_Delay(1);
+
+    return SDL_GetTicks() * 3;
+}
 
 void System_LockAudio()
 {
@@ -160,12 +163,6 @@ void System_UnlockVideo()
 
 void System_UpdateVideo()
 {
-    timerNow += timerInterval;
-    while (timerNow > SDL_GetTicks() * 3)
-    {
-        SDL_Delay(1);
-    }
-
     SDL_RenderClear(sdlRenderer);
     SDL_SetRenderTarget(sdlRenderer, sdlTarget);
     SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
@@ -219,6 +216,4 @@ void System_Init()
     SDL_PauseAudioDevice(sdlAudio, 0);
 
     keyState = SDL_GetKeyboardState(NULL);
-
-    timerNow = SDL_GetTicks() * 3;
 }

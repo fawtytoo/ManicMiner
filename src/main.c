@@ -24,11 +24,21 @@ void DoQuit()
 
 int main()
 {
+    int time;
+
     Audio_Init();
     System_Init();
 
+    time = System_GetTime();
+
     while (gameRunning)
     {
+        if (time > System_GetTime())
+        {
+            continue;
+        }
+        time += 50;
+
         Action();
 
         while (System_GetEvent(&gameInput))
