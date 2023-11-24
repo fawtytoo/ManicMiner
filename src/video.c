@@ -373,9 +373,9 @@ int Video_Tile(int pos, BYTE *gfx, BYTE paper, BYTE ink, int rows)
     return pos;
 }
 
-int Video_Miner(int pos, WORD *line, BYTE ink)
+void Video_Miner(int pos, WORD *line, BYTE ink)
 {
-    int     row, bit, hit = 0;
+    int     row, bit;
     int     pixel;
     WORD    word;
 
@@ -389,7 +389,7 @@ int Video_Miner(int pos, WORD *line, BYTE ink)
             {
                 if (videoPixel[pixel].point & B_ROBOT)
                 {
-                    hit = 1;
+                    Action = Die_Action;
                 }
 
                 videoPixel[pixel].point |= B_MINER | 1;
@@ -397,8 +397,6 @@ int Video_Miner(int pos, WORD *line, BYTE ink)
             }
         }
     }
-
-    return hit;
 }
 
 void Video_SpriteBlend(int pos, WORD *line, BYTE ink)

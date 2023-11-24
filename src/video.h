@@ -11,7 +11,7 @@ void Video_WriteLarge(int, int, char *);
 void Video_DrawPiano(void);
 void Video_Sprite(int, WORD *, BYTE, BYTE);
 void Video_SpriteBlend(int, WORD *, BYTE);
-int Video_Miner(int, WORD *, BYTE);
+void Video_Miner(int, WORD *, BYTE);
 int Video_Tile(int, BYTE *, BYTE, BYTE, int);
 void Video_PixelFill(int, int, BYTE);
 void Video_LevelInkFill(BYTE);

@@ -356,10 +356,7 @@ void DoMinerTicker()
 
 void DoMinerDrawer()
 {
-    if (Video_Miner((minerY << 8) | minerX, minerSprite[minerFrame], minerInk))
-    {
-        Action = Die_Action;
-    }
+    Video_Miner((minerY << 8) | minerX, minerSprite[minerFrame], minerInk);
 }
 
 void Miner_Init()
