@@ -83,7 +83,6 @@ int Miner_GetSeq(void);
 void Portal_Init(void);
 void Portal_Drawer(void);
 void DoPortalTicker(void);
-void DoPortalFlasher(void);
 
 // robots
 extern int  robotCount[8];

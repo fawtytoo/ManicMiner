@@ -26,19 +26,10 @@ BYTE    loaderColour[2][256] =
 };
 
 int     loaderTicks = 0;
-int     loaderPage = 0;
-
-void DoLoaderFlasher()
-{
-    if (DoFlash())
-    {
-        loaderPage = 1 - loaderPage;
-    }
-}
 
 void DoLoaderDrawer()
 {
-    Video_CopyColour(loaderColour[loaderPage], 256, 256);
+    Video_CopyColour(loaderColour[videoFlash], 256, 256);
 }
 
 void DoLoaderTicker()
@@ -68,7 +59,6 @@ void Loader_Action()
     Responder = DoLoaderResponder;
     Ticker = DoLoaderInit;
     Drawer = DoLoaderDrawer;
-    Flasher = DoLoaderFlasher;
 
     Action = DoNothing;
 }

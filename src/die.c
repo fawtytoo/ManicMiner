@@ -50,7 +50,6 @@ void Die_Action()
     Responder = DoNothing;
     Ticker = DoDieInit;
     Drawer = DoDieDrawer;
-    Flasher = DoNothing;
 
     Action = DoNothing;
 }

@@ -41,29 +41,18 @@ PORTAL  portalInfo[20] =
 };
 
 int     portalTile, portalPos;
-BYTE    portalPaper, portalInk;
+BYTE    portalPaper[2], portalInk[2];
 WORD    *portalSprite;
-
-void DoPortalFlasher()
-{
-    BYTE    ink;
-
-    if (DoFlash())
-    {
-        ink = portalInk;
-        portalInk = portalPaper;
-        portalPaper = ink;
-    }
-}
+int     portalFlash;
 
 void DoPortalTicker()
 {
+    portalFlash = videoFlash;
+
     if (portalTile != minerTile)
     {
         return;
     }
-
-    Flasher = DoNothing;
 
     if (gameLevel == TWENTY && cheatEnabled == 0)
     {
@@ -77,15 +66,17 @@ void DoPortalTicker()
 
 void Portal_Drawer()
 {
-    Video_Sprite(portalPos, portalSprite, portalPaper, portalInk);
+    Video_Sprite(portalPos, portalSprite, portalPaper[portalFlash], portalInk[portalFlash]);
 }
 
 void Portal_Init()
 {
     PORTAL  *portal = &portalInfo[gameLevel];
 
-    portalPaper = portal->paper;
-    portalInk = portal->ink;
+    portalPaper[0] = portalInk[1] = portal->paper;
+    portalInk[0] = portalPaper[1] = portal->ink;
+
+    portalFlash = 0;
 
     portalTile = portal->y * 32 + portal->x;
     portalPos = portal->y * 8 * WIDTH + portal->x * 8;

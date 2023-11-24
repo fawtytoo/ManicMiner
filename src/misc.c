@@ -20,19 +20,6 @@ UINT    videoPalette[16] =
     0x804000    // brown
 };
 
-int     flashAcc = 0;
-
-int DoFlash()
-{
-    if (flashAcc++ == 20)
-    {
-        flashAcc = 0;
-        return 1;
-    }
-
-    return 0;
-}
-
 void Timer_Set(TIMER *timer, int numerator, int divisor)
 {
     timer->acc = 0;

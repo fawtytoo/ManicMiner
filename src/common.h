@@ -53,12 +53,13 @@ typedef unsigned int    UINT;
 
 typedef void (*EVENT)(void);
 
-extern EVENT    Action, Responder, Ticker, Drawer, Flasher;
+extern EVENT    Action, Responder, Ticker, Drawer;
 extern int      gameInput;
+
+extern int      videoFlash;
 
 void DoNothing(void);
 void DoQuit(void);
-int DoFlash(void);
 
 void Loader_Action(void);
 void Title_Action(void);

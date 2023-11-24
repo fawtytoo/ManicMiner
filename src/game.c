@@ -159,7 +159,6 @@ void Game_GotItem(int tile)
     }
 
     Portal_Ticker = DoPortalTicker;
-    Flasher = DoPortalFlasher;
 }
 
 void DoGameDraw()

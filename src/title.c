@@ -187,7 +187,6 @@ void Title_Action()
     Responder = DoTitleResponder;
     Ticker = DoTitleInit;
     Drawer = DoNothing;
-    Flasher = DoNothing;
 
     Action = DoTitleAction;
 }

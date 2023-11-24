@@ -5,6 +5,8 @@
 
 int     gameRunning = 1, gameInput;
 
+int     videoFlash = 0;
+
 EVENT   Action = Loader_Action;
 EVENT   Responder = DoNothing;
 EVENT   Ticker = DoNothing;
@@ -25,6 +27,7 @@ void DoQuit()
 int main()
 {
     int time;
+    int flash = 0;
 
     Audio_Init();
     System_Init();
@@ -51,7 +54,13 @@ int main()
         Drawer();
         System_UnlockVideo();
         System_UpdateVideo();
-        Flasher();
+
+        flash++;
+        if (flash == 20)
+        {
+            flash = 0;
+            videoFlash = 1 - videoFlash;
+        }
     }
 
     System_Quit();
