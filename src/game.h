@@ -9,8 +9,9 @@ extern int  gameAir, gameAirOld;
 extern int  gamePaused;
 extern int  gameTicks;
 
+extern EVENT    Game_DrawAir;
+
 void Game_ScoreAdd(int);
-void Game_AirDraw(void);
 void Game_ReduceAir(int);
 void Game_GameReset(void);
 void Game_CheckHighScore(void);

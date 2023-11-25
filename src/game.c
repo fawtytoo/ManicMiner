@@ -29,6 +29,7 @@ int     gameFrame;
 EVENT   GameTicker[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
 EVENT   GameDrawer[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
 EVENT   GameExtraLife[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
+EVENT   Game_DrawAir = DoNothing;
 
 EVENT   Spg_Ticker, Spg_Drawer;
 EVENT   Miner_Ticker, Miner_Drawer;
@@ -52,6 +53,17 @@ void Game_DrawLives()
     }
 }
 
+void DoDrawAir()
+{
+    gameAirOld--;
+    Video_AirBar(AIR + gameAirOld, 0x7);
+
+    if (gameAirOld == ((gameAir + 7) / 8))
+    {
+        Game_DrawAir = DoNothing;
+    }
+}
+
 void Game_ReduceAir(int amount)
 {
     gameAir -= amount;
@@ -59,6 +71,11 @@ void Game_ReduceAir(int amount)
     if (gameAir < 0)
     {
         gameAir = 0;
+    }
+
+    if (gameAirOld > ((gameAir + 7) / 8))
+    {
+        Game_DrawAir = DoDrawAir;
     }
 }
 
@@ -85,21 +102,6 @@ void Game_DrawScore()
 void Game_DrawHiScore()
 {
     GameDrawScore(SCORE, 5 * 8 + 4, gameHiScore, 0x6);
-}
-
-void Game_AirDraw()
-{
-    int c = gameAirOld;
-
-    if (c == ((gameAir + 7) >> 3))
-    {
-        return;
-    }
-
-    gameAirOld--;
-
-    c--;
-    Video_AirBar(AIR + c, 0x7);
 }
 
 void DoExtraLife()
@@ -230,7 +232,7 @@ void GamePause(int paused)
 
 void DoGameDrawer()
 {
-    Game_AirDraw();
+    Game_DrawAir();
 
     GameDrawer[gameFrame]();
     Game_ExtraLife();
@@ -271,6 +273,7 @@ void DoGameInit()
 
     gameAirOld = 224;
     gameAir = airData[gameLevel] * 8;
+    Game_DrawAir = DoNothing;
 
     itemCount = itemData[gameLevel];
 

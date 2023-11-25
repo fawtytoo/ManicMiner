@@ -17,7 +17,7 @@ void DoTransDrawer()
 
     if (gameDemo == 0)
     {
-        Game_AirDraw();
+        Game_DrawAir();
         Game_ExtraLife();
     }
 }
@@ -44,9 +44,17 @@ void DoTransTicker()
         {
             Game_ScoreAdd(8);
             Game_ReduceAir(8);
+        }
+        else if (gameAir > 0)
+        {
+            Game_ScoreAdd(gameAir);
+            Game_ReduceAir(gameAir);
+        }
+
+        if (gameAirOld > 0)
+        {
             return;
         }
-        Game_ScoreAdd(gameAir);
     }
 
     if (gameLevel++ == TWENTY)
