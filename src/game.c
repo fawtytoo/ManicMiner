@@ -115,7 +115,6 @@ void DoExtraLife()
 
     System_Border(levelBorder[gameLevel]);
     GameExtraLife[0] = DoNothing;
-    gameLives++;
     Game_DrawLives();
 }
 
@@ -136,6 +135,7 @@ void Game_ScoreAdd(int score)
         return;
     }
 
+    gameLives++;
     gameExtraLifeCount = 16;
     GameExtraLife[0] = DoExtraLife;
 }
