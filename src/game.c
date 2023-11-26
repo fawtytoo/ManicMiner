@@ -28,7 +28,7 @@ int     gameFrameAdj[5] = {1, 2, 3, 4, 0};
 int     gameFrame;
 EVENT   GameTicker[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
 EVENT   GameDrawer[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
-EVENT   GameExtraLife[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
+EVENT   Game_ExtraLife = DoNothing;
 EVENT   Game_DrawAir = DoNothing;
 
 EVENT   Spg_Ticker, Spg_Drawer;
@@ -108,7 +108,7 @@ void DoExtraLife()
 {
     gameExtraLifeCount--;
 
-    System_Border(gameExtraLifeCount);
+    System_Border(gameExtraLifeCount >> 2);
 
     if (gameExtraLifeCount > 0)
     {
@@ -116,13 +116,7 @@ void DoExtraLife()
     }
 
     System_Border(levelBorder[gameLevel]);
-    GameExtraLife[0] = DoNothing;
-    Game_DrawLives();
-}
-
-void Game_ExtraLife()
-{
-    GameExtraLife[gameFrame]();
+    Game_ExtraLife = DoNothing;
 }
 
 void Game_ScoreAdd(int score)
@@ -138,8 +132,9 @@ void Game_ScoreAdd(int score)
     }
 
     gameLives++;
-    gameExtraLifeCount = 16;
-    GameExtraLife[0] = DoExtraLife;
+    Game_DrawLives();
+    gameExtraLifeCount = 16 << 2;
+    Game_ExtraLife = DoExtraLife;
 }
 
 void Game_GotItem(int tile)
@@ -328,7 +323,7 @@ void Game_GameReset()
     gamePaused = 0;
     gameScore = 0;
 
-    GameExtraLife[0] = DoNothing;
+    Game_ExtraLife = DoNothing;
     Game_DrawHiScore();
 
     Miner_SetSeq(4);

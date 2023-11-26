@@ -11,6 +11,8 @@ int     dieLevel;
 void DoDieDrawer()
 {
     Video_LevelInkFill(dieLevel >> 1);
+
+    Game_ExtraLife();
     Game_DrawAir(); // allows the air bar to catch up if necessary
 }
 

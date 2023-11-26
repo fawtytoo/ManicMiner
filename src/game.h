@@ -10,14 +10,13 @@ extern int  gamePaused;
 extern int  gameTicks;
 
 extern EVENT    Game_DrawAir;
+extern EVENT    Game_ExtraLife;
 
 void Game_ScoreAdd(int);
 void Game_ReduceAir(int);
 void Game_GameReset(void);
 void Game_CheckHighScore(void);
 void Game_GotItem(int);
-void Game_ExtraLife(void);
-void Game_DoGameAction(void);
 
 // cheat
 extern int      cheatEnabled;

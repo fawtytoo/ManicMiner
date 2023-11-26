@@ -8,24 +8,21 @@ int transLevel;
 
 void DoTransDrawer()
 {
-    if (transLevel > 0)
-    {
-        Video_LevelPaperFill(transLevel >> 3);
-        Video_LevelInkFill(transLevel & 0x7);
-        return;
-    }
-
     if (gameDemo == 0)
     {
         Game_DrawAir();
         Game_ExtraLife();
     }
+
+    if (transLevel > 0)
+    {
+        Video_LevelPaperFill(transLevel >> 3);
+        Video_LevelInkFill(transLevel & 0x7);
+    }
 }
 
 void DoTransTicker()
 {
-    Game_DoGameAction();
-
     if (transLevel > 1)
     {
         transLevel--;
