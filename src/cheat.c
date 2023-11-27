@@ -36,6 +36,11 @@ void DoCheatEnabled()
 
     if (gameInput < KEY_0 || gameInput > KEY_9)
     {
+        return;
+    }
+
+    if (cheatPos == 2)
+    {
         cheatPos = 0;
         return;
     }
