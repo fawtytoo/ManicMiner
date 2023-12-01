@@ -26,8 +26,6 @@ int     gameExtraLifeCount;
 
 int     gameFrameAdj[5] = {1, 2, 3, 4, 0};
 int     gameFrame;
-EVENT   GameTicker[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
-EVENT   GameDrawer[5] = {DoNothing, DoNothing, DoNothing, DoNothing, DoNothing};
 EVENT   Game_ExtraLife = DoNothing;
 EVENT   Game_DrawAir = DoNothing;
 
@@ -158,8 +156,16 @@ void Game_GotItem(int tile)
     Portal_Ticker = DoPortalTicker;
 }
 
-void DoGameDraw()
+void DoGameDrawer()
 {
+    Game_DrawAir();
+    Game_ExtraLife();
+
+    if (gameFrame != 0)
+    {
+        return;
+    }
+
     Level_Drawer();
     Robots_Drawer();
     Miner_Drawer();
@@ -172,8 +178,13 @@ void DoGameDraw()
     }
 }
 
-void DoGameTick()
+void DoGameTicker()
 {
+    if (gameFrame != 0)
+    {
+        return;
+    }
+
     gameTicks++;
 
     Level_Ticker();
@@ -213,29 +224,16 @@ void GamePause(int paused)
 
     if (paused)
     {
-        GameTicker[0] = DoNothing;
-        GameDrawer[0] = DoNothing;
+        Ticker = DoNothing;
+        Drawer = DoNothing;
         Audio_Play(MUS_STOP);
     }
     else
     {
-        GameTicker[0] = DoGameTick;
-        GameDrawer[0] = DoGameDraw;
+        Ticker = DoGameTicker;
+        Drawer = DoGameDrawer;
         Audio_Play(gameMusic);
     }
-}
-
-void DoGameDrawer()
-{
-    Game_DrawAir();
-
-    GameDrawer[gameFrame]();
-    Game_ExtraLife();
-}
-
-void DoGameTicker()
-{
-    GameTicker[gameFrame]();
 }
 
 void DoGameInit()
@@ -344,9 +342,6 @@ void Game_GameReset()
         Miner_Ticker = DoNothing;
         Miner_Drawer = DoNothing;
     }
-
-    GameTicker[0] = DoGameTick;
-    GameDrawer[0] = DoGameDraw;
 
     Audio_Music(MUS_GAME, MUS_STOP);
 }
