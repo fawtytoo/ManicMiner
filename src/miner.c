@@ -221,11 +221,13 @@ void MinerMove()
 
         if (type[0] == T_HARM || type[1] == T_HARM)
         {
-            Action = Die_Action;
-            return;
+            if (minerAir == 1)
+            {
+                MoveLeftRight();
+                return;
+            }
         }
-
-        if (type[0] > T_SPACE || type[1] > T_SPACE)
+        else if (type[0] > T_SPACE || type[1] > T_SPACE)
         {
             if (minerAir >= 12)
             {
