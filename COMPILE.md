@@ -4,10 +4,8 @@
 
 ### Native Linux
 
-
-
 ```bash
-git clone [https://github.com/fawtytoo/ManicMiner.git](https://github.com/fawtytoo/ManicMiner.git)
+git clone https://github.com/fawtytoo/ManicMiner.git
 ```
 
 ```bash
