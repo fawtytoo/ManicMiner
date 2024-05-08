@@ -6,13 +6,15 @@
 
 
 
-```git clone [https://github.com/fawtytoo/ManicMiner.git](https://github.com/fawtytoo/ManicMiner.git)```
+```bash
+git clone [https://github.com/fawtytoo/ManicMiner.git](https://github.com/fawtytoo/ManicMiner.git)
+```
 
-```cd ManicMiner```
-
-```make```
-
-```manicminer```
+```bash
+cd ManicMiner
+make
+manicminer
+```
 
 ### Mingw for Linux
 
@@ -28,19 +30,21 @@ Run MSYS2 MINGW64
 
 Update base system
 
-```pacman -Syu```
+```bash
+pacman -Syu
+```
 
 Install development tools and libraries
-```pacman -S git make gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-toolchain```
-
-```git clone https://github.com/fawtytoo/ManicMiner.git```
-
-```cd ManicMiner```
-
-```make```
+```bash
+pacman -S git make gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-toolchain
+git clone https://github.com/fawtytoo/ManicMiner.git
+cd ManicMiner
+make
+```
 copy SDL2.dll needed to run the game.
-```cp /mingw64/bin/SDL2.dll .```
-
-```manicminer.exe```
+```bash
+cp /mingw64/bin/SDL2.dll .
+manicminer.exe
+```
 
 ### Windows 32 bit
