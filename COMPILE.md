@@ -16,7 +16,18 @@ manicminer
 
 ### Mingw for Linux
 
-Next on the list to document.
+``bash
+git clone https://github.com/fawtytoo/ManicMiner.git
+```
+
+```bash
+cd ManicMiner
+make OS=Win
+manicminer
+```
+```bash
+make OS=Win clean
+'''
 
 ## Windows
 
