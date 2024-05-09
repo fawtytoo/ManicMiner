@@ -66,6 +66,8 @@ manicminer.exe
 
 ### Windows 10 Msys2 32 bit
 
+Install msys2 latest version [https://www.msys2.org/](https://www.msys2.org/)
+
 run MSYS2 MINGW32
 
 Update base system
