@@ -59,10 +59,10 @@ int Video_Viewport(int width, int height, int *x, int *y, int *w, int *h)
     *x = (width - *w) / 2;
     *y = (height - *h) / 2;
 
-    multiply = *h / HEIGHT;
-    if (multiply > 2)
+    multiply = (*h * 10 / HEIGHT - 5) / 10;
+    if (multiply < 1)
     {
-        multiply -= 2;
+        multiply = 1;
     }
 
     return multiply;
