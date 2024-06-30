@@ -60,6 +60,7 @@ jobs:
     - name: Package Manic Miner into AppImage
       run: |
        mkdir -p AppDir/usr/bin
+       mkdir -p AppDir/usr/lib
        ln -s usr/bin/manicminer AppDir/AppRun
        cp SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
        cp manicminer AppDir/usr/bin/
