@@ -19,7 +19,7 @@ jobs:
     - name: Set up libs
       run: |
         sudo apt-get update
-        sudo apt-get install -y libsdl2-dev appstream wget fuse ibpipewire-0.3-dev libfuse2
+        sudo apt-get install -y libsdl2-dev appstream wget fuse ibpipewire-0.2-dev libfuse2
     - name: Build SDL library
       run: |
         SDL_RELEASE_TAG=release-2.30.2
