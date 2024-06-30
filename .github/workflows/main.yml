@@ -1,0 +1,57 @@
+name: Build Manic Miner
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Set up SDL2 and appstream
+      run: sudo apt-get install -y libsdl2-dev appstream
+
+    - name: Build Manic Miner
+      run: |
+        make dir
+        make all
+
+    - name: Set up AppImage toolchain
+      run: |
+        sudo apt-get install -y wget fuse
+        wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x appimagetool
+
+    - name: Package Manic Miner into AppImage
+      run: |
+        mkdir -p AppDir/usr/bin
+        cp manicminer AppDir/usr/bin/
+        # Copy any necessary libraries and assets to AppDir
+        # e.g., cp /path/to/library.so AppDir/usr/lib/
+        # e.g., cp -r /path/to/assets AppDir/usr/share/
+        cp appimagetool AppDir/
+        # Create an AppRun script
+        echo -e '#!/bin/bash\nexec "\${HERE}/usr/bin/manicminer" "\$@"' > AppDir/AppRun
+        chmod +x AppDir/AppRun
+        # Create a desktop entry file
+        mkdir -p AppDir/usr/share/applications
+        echo -e '[Desktop Entry]\nName=Manic Miner\nExec=manicminer\nIcon=manicminer\nType=Application\nCategories=Game;' > AppDir/usr/share/applications/manicminer.desktop
+        # Create a valid icon file (replace this with your actual icon if available)
+        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+        wget -O AppDir/usr/share/icons/hicolor/256x256/apps/manicminer.png https://cdn2.steamgriddb.com/icon/c65db23b93631916f5bb31abf24462b8.png
+        # Generate the AppImage
+        ./appimagetool AppDir manicminer.AppImage
+
+    - name: Upload AppImage artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: manicminer.AppImage
+        path: manicminer.AppImage
