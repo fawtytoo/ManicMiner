@@ -60,12 +60,11 @@ jobs:
     - name: Package Manic Miner into AppImage
       run: |
        mkdir -p AppDir/usr/bin
-       cd AppDire
-       ln -s usr/bin/manicminer AppRun
-       cp external/SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
+       ln -s usr/bin/manicminer AppDir/AppRun
+       cp SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
        cp manicminer AppDir/usr/bin/
        chmod +x AppDir/AppRun
-       # Create a valid icon file (replace this with your actual icon if available)
+
        # Generate the AppImage
        ./appimagetool AppDir manicminer.AppImage
 
