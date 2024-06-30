@@ -66,6 +66,7 @@ jobs:
        echo -e '[Desktop Entry]\nName=Manic Miner\nExec=manicminer\nIcon=manicminer\nType=Application\nCategories=Game;' > usr/share/applications/manicminer.desktop    
        ln -s usr/bin/manicminer AppRun
        #ln -s usr/share/applications/manicminer.desktop .
+       cd ..
        cp SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
        cp manicminer AppDir/usr/bin/
        chmod +x AppDir/AppRun
