@@ -26,8 +26,6 @@ jobs:
         SDL_SHARED_LIBRARY=libSDL2-2.0.so.0.3000.2
         if [ ! -f external/SDL/build/${SDL_SHARED_LIBRARY} ]; then
          echo "Building the SDL library..."
-         cd external
-         rm -rf SDL
          git clone https://github.com/libsdl-org/SDL.git
          cd SDL
          git checkout $SDL_RELEASE_TAG
@@ -37,7 +35,7 @@ jobs:
          if [ $(grep PKG_PIPEWIRE_VERSION:INTERNAL= CMakeCache.txt) = "PKG_PIPEWIRE_VERSION:INTERNAL=" ]; then
           echo "The SDL library is not configured with PipeWire support, aborting. Check this?"
           exit 1
-          fi
+         fi
         make -j4
         else
            echo "The SDL library has already been built, skipping this step"
