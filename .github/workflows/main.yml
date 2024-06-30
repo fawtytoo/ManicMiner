@@ -50,30 +50,26 @@ jobs:
         wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool
         
-    - name: Download linuxdeploy
-      run: |
-        if [ ! -f linuxdeploy-x86_64.AppImage ]; then
-          wget "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-        fi
-        chmod a+x linuxdeploy-x86_64.AppImage
-
     - name: Package Manic Miner into AppImage
       run: |
        mkdir -p AppDir/usr/bin
        mkdir -p AppDir/usr/lib
        mkdir -p AppDir/usr/share/applications
        cd AppDir
-       echo -e '[Desktop Entry]\nName=Manic Miner\nExec=manicminer\nIcon=manicminer\nType=Application\nCategories=Game;' > usr/share/applications/manicminer.desktop    
+       echo -e '[Desktop Entry]\nName=Manic Miner\nExec=manicminer\nIcon=manicminer\nType=Application\nCategories=Game;' > usr/share/applications/manicminer.desktop
        ln -s usr/bin/manicminer AppRun
-       #ln -s usr/share/applications/manicminer.desktop .
+       ln -s usr/share/applications/manicminer.desktop .
+       ln -s ../src/manicminer.png .
+       ln -s ../src/manicminer.png .DirIcon
        cd ..
+
+       # Copy the SDL library and built binary
        cp SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
        cp manicminer AppDir/usr/bin/
 
        # Generate the AppImage
-       ./appimagetool AppDir
-       #chmod +x manicminer.AppImage
-       #echo "Created M Miner"
+       ./appimagetool AppDir manicminer.AppImage
+       chmod +x manicminer.AppImage
 
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v3
