@@ -69,10 +69,11 @@ jobs:
        cd ..
        cp SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
        cp manicminer AppDir/usr/bin/
-       chmod +x AppDir/AppRun
 
        # Generate the AppImage
-       ./appimagetool AppDir manicminer.AppImage
+       ./appimagetool AppDir
+       #chmod +x manicminer.AppImage
+       #echo "Created M Miner"
 
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v3
