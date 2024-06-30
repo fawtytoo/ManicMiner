@@ -69,10 +69,11 @@ jobs:
 
        # Generate the AppImage
        ./appimagetool AppDir manicminer.AppImage
+       mv nmanicminer.AppImage manicminer2004.AppImage
        chmod +x manicminer.AppImage
 
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v3
       with:
-        name: manicminer.AppImage
-        path: manicminer.AppImage
+        name: manicminer2004.AppImage
+        path: manicminer2004.AppImage
