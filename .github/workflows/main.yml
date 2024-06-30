@@ -16,39 +16,61 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v3
 
-    - name: Set up SDL2 and appstream
-      run: sudo apt-get install -y libsdl2-dev appstream
+    - name: Set up libs
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsdl2-dev appstream wget fuse
+    - name: Build SDL library
+      run: |
+        SDL_RELEASE_TAG=release-2.30.2
+        SDL_SHARED_LIBRARY=libSDL2-2.0.so.0.3000.2
+        if [ ! -f external/SDL/build/${SDL_SHARED_LIBRARY} ]; then
+          echo "Building the SDL library..."
+          cd external
+          rm -rf SDL
+          git clone https://github.com/libsdl-org/SDL.git
+          cd SDL
+          git checkout $SDL_RELEASE_TAG
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -S .. -B .
+          if [ $(grep PKG_PIPEWIRE_VERSION:INTERNAL= CMakeCache.txt) = "PKG_PIPEWIRE_VERSION:INTERNAL=" ]; then
+              echo "The SDL library is not configured with PipeWire support, aborting. Check this?"
+              exit 1
+          fi
+        make -j4
+           cd ../../..
+        else
+           echo "The SDL library has already been built, skipping this step"
+        fi
 
     - name: Build Manic Miner
       run: |
-        make dir
-        make all
+        make
 
-    - name: Set up AppImage toolchain
+    - name: Download AppImage tool
       run: |
-        sudo apt-get install -y wget fuse
         wget -O appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
         chmod +x appimagetool
+        
+    - name: Download linuxdeploy
+      run: |
+        if [ ! -f linuxdeploy-x86_64.AppImage ]; then
+          wget "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
+        fi
+        chmod a+x linuxdeploy-x86_64.AppImage
 
     - name: Package Manic Miner into AppImage
       run: |
-        mkdir -p AppDir/usr/bin
-        cp manicminer AppDir/usr/bin/
-        # Copy any necessary libraries and assets to AppDir
-        # e.g., cp /path/to/library.so AppDir/usr/lib/
-        # e.g., cp -r /path/to/assets AppDir/usr/share/
-        cp appimagetool AppDir/
-        # Create an AppRun script
-        echo -e '#!/bin/bash\nexec "\${HERE}/usr/bin/manicminer" "\$@"' > AppDir/AppRun
-        chmod +x AppDir/AppRun
-        # Create a desktop entry file
-        mkdir -p AppDir/usr/share/applications
-        echo -e '[Desktop Entry]\nName=Manic Miner\nExec=manicminer\nIcon=manicminer\nType=Application\nCategories=Game;' > AppDir/usr/share/applications/manicminer.desktop
-        # Create a valid icon file (replace this with your actual icon if available)
-        mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-        wget -O AppDir/usr/share/icons/hicolor/256x256/apps/manicminer.png https://cdn2.steamgriddb.com/icon/c65db23b93631916f5bb31abf24462b8.png
-        # Generate the AppImage
-        ./appimagetool AppDir manicminer.AppImage
+       mkdir -p AppDir/usr/bin
+       cd AppDire
+       ln -s usr/bin/manicminer AppRun
+       cp external/SDL/build/libSDL2-2.0.so.0 AppDir/usr/lib/libSDL2-2.0.so.0
+       cp manicminer AppDir/usr/bin/
+       chmod +x AppDir/AppRun
+       # Create a valid icon file (replace this with your actual icon if available)
+       # Generate the AppImage
+       ./appimagetool AppDir manicminer.AppImage
 
     - name: Upload AppImage artifact
       uses: actions/upload-artifact@v3
