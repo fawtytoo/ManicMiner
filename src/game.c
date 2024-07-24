@@ -19,7 +19,7 @@ int     airData[20] = {224, 224, 220, 220, 220, 220, 220, 220, 220, 224, 220, 22
 
 int     itemCount;
 
-int     levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1, 0x5, 0xc, 0x6, 0xb, 0xd, 0x8, 0x1, 0x0, 0x5};
+int     levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1, 0x5, 0xa, 0x1, 0xb, 0xd, 0x8, 0x1, 0x0, 0x5};
 
 int     gameScore, gameHiScore = 0;
 int     gameExtraLifeCount;
@@ -28,10 +28,16 @@ int     gameFrameAdj[5] = {1, 2, 3, 4, 0};
 int     gameFrame;
 EVENT   Game_ExtraLife = DoNothing;
 EVENT   Game_DrawAir = DoNothing;
+EVENT   Game_Unpause = DoNothing;
 
 EVENT   Spg_Ticker, Spg_Drawer;
 EVENT   Miner_Ticker, Miner_Drawer;
 EVENT   Portal_Ticker;
+
+void DoGameFrameAdjust()
+{
+    gameFrame = gameFrameAdj[gameFrame];
+}
 
 void Game_CheckHighScore()
 {
@@ -178,6 +184,13 @@ void DoGameDrawer()
     }
 }
 
+void DoGameDrawOnce()
+{
+    DoGameDrawer();
+
+    Drawer = DoNothing;
+}
+
 void DoGameTicker()
 {
     if (gameFrame != 0)
@@ -224,16 +237,24 @@ void GamePause(int paused)
 
     if (paused)
     {
+        Action = DoNothing;
         Ticker = DoNothing;
         Drawer = DoNothing;
         Audio_Play(MUS_STOP);
     }
     else
     {
+        Action = DoGameFrameAdjust;
         Ticker = DoGameTicker;
         Drawer = DoGameDrawer;
         Audio_Play(gameMusic);
     }
+}
+
+void DoGameUnpause()
+{
+    GamePause(0);
+    Game_Unpause = DoNothing;
 }
 
 void DoGameInit()
@@ -276,9 +297,15 @@ void DoGameInit()
 
     gameFrame = 0;
 
-    Audio_Play(gameMusic);
-
-    Ticker = DoGameTicker;
+    if (gamePaused == 0)
+    {
+        Audio_Play(gameMusic);
+        Ticker = DoGameTicker;
+    }
+    else
+    {
+        Ticker = DoNothing;
+    }
 }
 
 void DoGameDemoResponder()
@@ -291,18 +318,14 @@ void DoGameResponder()
     if (gameInput == KEY_PAUSE)
     {
         GamePause(1 - gamePaused);
+        Game_Unpause = gamePaused ? DoGameUnpause : DoNothing;
         return;
     }
-
-    if (gamePaused)
-    {
-        GamePause(0);
-    }
-
-    if (gameInput == KEY_MUTE)
+    else if (gameInput == KEY_MUTE)
     {
         gameMusic = gameMusic == MUS_PLAY ? MUS_STOP : MUS_PLAY;
         Audio_Play(gameMusic);
+        Game_Unpause();
     }
     else if (gameInput == KEY_ESCAPE)
     {
@@ -318,8 +341,10 @@ void Game_GameReset()
 {
     gameLives = 3;
     gameLevel = 0;
-    gamePaused = 0;
     gameScore = 0;
+
+    gamePaused = 0;
+    Game_Unpause = DoNothing;
 
     Game_ExtraLife = DoNothing;
     Game_DrawHiScore();
@@ -346,9 +371,12 @@ void Game_GameReset()
     Audio_Music(MUS_GAME, MUS_STOP);
 }
 
-void Game_DoGameAction()
+void Game_ChangeLevel()
 {
-    gameFrame = gameFrameAdj[gameFrame];
+    Ticker = DoGameInit;
+    Drawer = gamePaused ? DoGameDrawOnce : DoGameDrawer;
+
+    Action = gamePaused ? DoNothing : DoGameFrameAdjust;
 }
 
 void Game_Action()
@@ -357,5 +385,5 @@ void Game_Action()
     Ticker = DoGameInit;
     Drawer = DoGameDrawer;
 
-    Action = Game_DoGameAction;
+    Action = DoGameFrameAdjust;
 }

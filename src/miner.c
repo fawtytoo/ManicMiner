@@ -48,7 +48,7 @@ MINER   minerStart[20] =
     {2, 13, 0, D_RIGHT, 0x8}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7}, {29, 13, 4, D_LEFT, 0x4},
     {1, 3, 0, D_RIGHT, 0x7}, {15, 3, 7, D_LEFT, 0x6}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
     {1, 13, 0, D_RIGHT, 0x7}, {1, 4, 0, D_RIGHT, 0x7}, {3, 1, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
-    {29, 13, 0, D_RIGHT, 0x7}, {29, 13, 0, D_RIGHT, 0xe}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
+    {29, 13, 0, D_RIGHT, 0x7}, {29, 13, 0, D_RIGHT, 0x0}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
     {1, 3, 7, D_LEFT, 0x7}, {29, 13, 7, D_LEFT, 0x7}, {14, 10, 0, D_RIGHT, 0x5}, {27, 13, 4, D_LEFT, 0x7}
 };
 
