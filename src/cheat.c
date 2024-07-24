@@ -12,36 +12,41 @@ void DoCheatEnabled()
 {
     int level;
 
-    if (gameInput == KEY_ENTER && cheatPos > 0)
+    if (gameInput == KEY_ENTER)
     {
-        level = cheatLevel[0];
-        if (cheatPos == 2)
+        if (cheatPos > 0)
         {
-            level = level * 10 + cheatLevel[1];
+            level = cheatLevel[0];
+            if (cheatPos == 2)
+            {
+                level = level * 10 + cheatLevel[1];
+            }
+            level--;
+
+            cheatPos = 0;
+
+            if (level < 0 || level > TWENTY || (level == gameLevel && (gameTicks == 0 || gamePaused == 0)))
+            {
+                Game_Unpause();
+                return;
+            }
+
+            gameLevel = level;
+
+            Action = Game_ChangeLevel;
         }
-        level--;
-
-        cheatPos = 0;
-
-        if (level < 0 || level > TWENTY || level == gameLevel)
-        {
-            return;
-        }
-
-        gameLevel = level;
-
-        Action = Game_Action;
         return;
     }
-
-    if (gameInput < KEY_0 || gameInput > KEY_9)
+    else if (gameInput < KEY_0 || gameInput > KEY_9)
     {
+        Game_Unpause();
         return;
     }
 
     if (cheatPos == 2)
     {
         cheatPos = 0;
+        Game_Unpause();
         return;
     }
 
@@ -63,6 +68,7 @@ void DoCheatDisabled()
     {
         cheatCodeUsed = -1;
         cheatPos = 0;
+        Game_Unpause();
         return;
     }
 
