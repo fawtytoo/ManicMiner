@@ -611,6 +611,7 @@ void Audio_Callback(short *buffer, int length)
         if (audioSamples == 0)
         {
             audioSamples = Timer_Update(&timerTick);
+            videoSync = 1;
 
             if (audioMusicPlaying)
             {

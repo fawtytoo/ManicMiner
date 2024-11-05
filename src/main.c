@@ -6,6 +6,7 @@
 int     gameRunning = 1, gameInput;
 
 int     videoFlash = 0;
+int     videoSync = 0;
 
 EVENT   Action = Loader_Action;
 EVENT   Responder = DoNothing;
@@ -26,22 +27,13 @@ void DoQuit()
 
 int main()
 {
-    int time;
     int flash = 0;
 
     Audio_Init();
     System_Init();
 
-    time = System_GetTime();
-
     while (gameRunning)
     {
-        if (time > System_GetTime())
-        {
-            continue;
-        }
-        time += 50;
-
         Action();
 
         while (System_GetEvent(&gameInput))
@@ -54,6 +46,13 @@ int main()
         Drawer();
         System_UnlockVideo();
         System_UpdateVideo();
+
+        do
+        {
+            System_Delay();
+        }
+        while (!videoSync);
+        videoSync = 0;
 
         flash++;
         if (flash == 20)

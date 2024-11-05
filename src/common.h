@@ -57,6 +57,7 @@ extern EVENT    Action, Responder, Ticker, Drawer;
 extern int      gameInput;
 
 extern int      videoFlash;
+extern int      videoSync;
 
 void DoNothing(void);
 void DoQuit(void);

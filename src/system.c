@@ -13,11 +13,9 @@ const BYTE          *keyState;
 UINT                *texPixels;
 int                 texPitch;
 
-int System_GetTime()
+void System_Delay()
 {
     SDL_Delay(1);
-
-    return SDL_GetTicks() * 3;
 }
 
 void System_LockAudio()
