@@ -5,8 +5,8 @@
 
 typedef struct
 {
-    BYTE    ink;
-    BYTE    point;
+    int     ink;
+    int     point;
 }
 PIXEL;
 
@@ -279,7 +279,7 @@ void Video_PianoKey(int tile, BYTE ink)
         {
             if (videoPixel[pixel].point)
             {
-                System_SetPixel(pixel, ink);
+                videoPixel[pixel].ink = ink;
             }
         }
     }
@@ -287,10 +287,10 @@ void Video_PianoKey(int tile, BYTE ink)
 
 void Video_AirBar(int pixel, BYTE ink)
 {
-    System_SetPixel(pixel, ink);
-    System_SetPixel(pixel += WIDTH, ink);
-    System_SetPixel(pixel += WIDTH, ink);
-    System_SetPixel(pixel += WIDTH, ink);
+    videoPixel[pixel].ink = ink;
+    videoPixel[pixel += WIDTH].ink = ink;
+    videoPixel[pixel += WIDTH].ink = ink;
+    videoPixel[pixel += WIDTH].ink = ink;
 }
 
 void Video_TilePaper(int tile, BYTE paper)
@@ -303,7 +303,7 @@ void Video_TilePaper(int tile, BYTE paper)
         pos = ((point << 5) & 0x700) | (point & 0x7);
         if ((videoPixel[pixel + pos].point & 1) == 0)
         {
-            System_SetPixel(pixel + pos, paper);
+            videoPixel[pixel + pos].ink = paper;
         }
     }
 }
@@ -328,7 +328,7 @@ void Video_TileInk(int tile, BYTE ink)
         pos = ((point << 5) & 0x700) | (point & 0x7);
         if (videoPixel[pixel + pos].point & 1)
         {
-            System_SetPixel(pixel + pos, ink);
+            videoPixel[pixel + pos].ink = ink;
         }
     }
 }
@@ -348,7 +348,7 @@ void Video_PixelFill(int pixel, int size, BYTE ink)
     for ( ; size > 0; size--, pixel++)
     {
         videoPixel[pixel].point = 0;
-        System_SetPixel(pixel, ink);
+        videoPixel[pixel].ink = ink;
     }
 }
 
@@ -366,7 +366,7 @@ int Video_Tile(int pos, BYTE *gfx, BYTE paper, BYTE ink, int rows)
         for (bit = 0; bit < 8; bit++, pixel--, byte >>= 1)
         {
             videoPixel[pixel].point = byte & B_LEVEL;
-            System_SetPixel(pixel, colour[byte & 1]);
+            videoPixel[pixel].ink = colour[byte & 1];
         }
     }
 
@@ -393,7 +393,7 @@ void Video_Miner(int pos, WORD *line, BYTE ink)
                 }
 
                 videoPixel[pixel].point |= B_MINER | 1;
-                System_SetPixel(pixel, ink);
+                videoPixel[pixel].ink = ink;
             }
         }
     }
@@ -416,7 +416,7 @@ void Video_SpriteBlend(int pos, WORD *line, BYTE ink)
             if (word & 1)
             {
                 videoPixel[pixel].point |= B_ROBOT | 1;
-                System_SetPixel(pixel, ink);
+                videoPixel[pixel].ink = ink;
             }
         }
     }
@@ -438,7 +438,7 @@ void Video_Sprite(int pos, WORD *line, BYTE paper, BYTE ink)
         for (bit = 0; bit < 16; bit++, pixel--, word >>= 1)
         {
             videoPixel[pixel].point = word & 1;
-            System_SetPixel(pixel, colour[word & 1]);
+            videoPixel[pixel].ink = colour[word & 1];
         }
     }
 }
@@ -462,7 +462,7 @@ void Video_DrawPiano()
             for (bit = 0; bit < 16; bit++, pixel += WIDTH, line >>= 1)
             {
                 videoPixel[pixel].point = line & 1;
-                System_SetPixel(pixel, ink[line & 1]);
+                videoPixel[pixel].ink = ink[line & 1];
             }
         }
     }
@@ -509,7 +509,7 @@ void Video_WriteLarge(int pos, int x, char *text)
                 line = *byte;
                 for (bit = 0; bit < 16; bit++, pixel += WIDTH, line >>= 1)
                 {
-                    System_SetPixel(pixel, textInk[line & 1]);
+                    videoPixel[pixel].ink = textInk[line & 1];
                 }
             }
         }
@@ -540,7 +540,7 @@ void Video_Write(int pos, char *text)
             line = *byte;
             for (bit = 0; bit < 8; bit++, pixel += WIDTH, line >>= 1)
             {
-                System_SetPixel(pixel, textInk[line & 1]);
+                videoPixel[pixel].ink = textInk[line & 1];
             }
         }
     }
@@ -569,4 +569,19 @@ void Video_CopyColour(BYTE *src, int dest, int size)
         Video_TilePaper(dest, *src >> 4);
         Video_TileInk(dest, *src & 0x0f);
     }
+}
+
+void Video_Draw()
+{
+    PIXEL   *pixel = &videoPixel[0];
+    int     pos;
+
+    System_LockVideo();
+
+    for (pos = 0; pos < WIDTH * HEIGHT; pos++, pixel++)
+    {
+        System_SetPixel(pos, pixel->ink);
+    }
+
+    System_UnlockVideo();
 }
