@@ -41,10 +41,9 @@ int main()
             Responder();
         }
 
-        System_LockVideo();
         Ticker();
         Drawer();
-        System_UnlockVideo();
+        Video_Draw();
         System_UpdateVideo();
 
         do
