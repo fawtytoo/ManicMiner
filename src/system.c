@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include "misc.h"
 
@@ -28,11 +28,18 @@ void System_UnlockAudio()
     SDL_UnlockAudioDevice(sdlAudio);
 }
 
-void SdlCallback(void *unused, Uint8 *buffer, int length)
+void SdlCallback(void *unused, Uint8 *stream, int length)
 {
     (void)unused;
 
-    Audio_Callback((short *)buffer, length / 2);
+    short   *output = (short *)stream;
+
+    while (length)
+    {
+        Audio_Output(output);
+        output += 2;
+        length -= 4;
+    }
 }
 
 void System_UpdateKeys()

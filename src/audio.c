@@ -599,98 +599,85 @@ void DoNoteOnBlack()
     Video_TilePaper(KEYBOARD * 32 + keyPos[*curMusic].pos, 0x2);
 }
 
-void Audio_Callback(short *buffer, int length)
+void Audio_Output(short output[2])
 {
-    short   left, right;
     int     channel, data, time;
 
-    length /= 2;
-
-    while (length)
+    if (audioSamples == 0)
     {
-        if (audioSamples == 0)
-        {
-            audioSamples = Timer_Update(&timerTick);
-            videoSync = 1;
+        audioSamples = Timer_Update(&timerTick);
+        videoSync = 1;
 
-            if (audioMusicPlaying)
+        if (audioMusicPlaying)
+        {
+            if (musicDelta == musicClock)
             {
-                if (musicDelta == musicClock)
+                do
                 {
-                    do
+                    data = *curMusic++;
+                    channel = data & 0x0f; 
+                    switch (data & 0xf0)
                     {
-                        data = *curMusic++;
-                        channel = data & 0x0f; 
-                        switch (data & 0xf0)
-                        {
-                          case EV_BORDER:
-                            System_Border(data >> 8);
-                            time = 0;
-                            continue;
+                      case EV_BORDER:
+                        System_Border(data >> 8);
+                        time = 0;
+                        continue;
 
-                          case EV_DRAW:
-                            NoteOn[data >> 8]();
-                            // FALLTHRU
-                          case EV_NOTEON:
-                            musicChannel[channel]->frequency = frequencyTable[*curMusic++];
-                            musicChannel[channel]->DoPhase = DoPhase;
-                            break;
+                      case EV_DRAW:
+                        NoteOn[data >> 8]();
+                        // FALLTHRU
+                      case EV_NOTEON:
+                        musicChannel[channel]->frequency = frequencyTable[*curMusic++];
+                        musicChannel[channel]->DoPhase = DoPhase;
+                        break;
 
-                          case EV_UNDRAW:
-                            NoteOff[data >> 8]();
-                            curMusic++;
-                            // FALLTHRU
-                          case EV_NOTEOFF:
-                            musicChannel[channel]->DoPhase = DoChannelOff;
-                            break;
+                      case EV_UNDRAW:
+                        NoteOff[data >> 8]();
+                        curMusic++;
+                        // FALLTHRU
+                      case EV_NOTEOFF:
+                        musicChannel[channel]->DoPhase = DoChannelOff;
+                        break;
 
-                          case EV_END:
-                            audioMusicPlaying = *curMusic;
-                            MusicReset();
-                            time = audioMusicPlaying ? 0 : 1;
-                            continue;
-                        }
-
-                        time = *curMusic++;
-                        musicDelta += time;
+                      case EV_END:
+                        audioMusicPlaying = *curMusic;
+                        MusicReset();
+                        time = audioMusicPlaying ? 0 : 1;
+                        continue;
                     }
-                    while (time == 0);
-                }
 
-                musicClock++;
+                    time = *curMusic++;
+                    musicDelta += time;
+                }
+                while (time == 0);
             }
 
-            curSfx = &sfxInfo[0];
-            for (channel = 0; channel < NSFX; channel++, curSfx++)
-            {
-                if (curSfx->clock == sfxClock)
-                {
-                    curSfx->DoSfx();
-                }
-            }
-
-            sfxClock++;
+            musicClock++;
         }
 
-        while (audioSamples && length)
+        curSfx = &sfxInfo[0];
+        for (channel = 0; channel < NSFX; channel++, curSfx++)
         {
-            left = right = 0;
-
-            curChannel = &audioChannel[0];
-            for (channel = 0; channel < musicChannels; channel++, curChannel++)
+            if (curSfx->clock == sfxClock)
             {
-                curChannel->DoPhase();
-                left += curChannel->left[2];
-                right += curChannel->right[2];
+                curSfx->DoSfx();
             }
-
-            *buffer++ = left;
-            *buffer++ = right;
-
-            audioSamples--;
-            length--;
         }
+
+        sfxClock++;
     }
+
+    output[L] = output[R] = 0;
+
+    curChannel = &audioChannel[0];
+    for (channel = 0; channel < musicChannels; channel++, curChannel++)
+    {
+        curChannel->DoPhase();
+        output[L] += curChannel->left[2];
+        output[R] += curChannel->right[2];
+    }
+
+    audioSamples--;
 }
 
 void Audio_Play(int playing)
