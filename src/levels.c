@@ -636,9 +636,8 @@ BYTE        *conveyRotate[2];
 
 EVENT       DoWall;
 
-// these are used for tiles that transition to another tile: collapse, wall, etc
+// this is used for tiles that transition to another tile: collapse, wall, etc
 BYTE        *gfxSpace = (BYTE [8])SPACE;
-BYTE        *gfxSolid = (BYTE [8]){255, 255, 255, 255, 255, 255, 255, 255};
 
 TILE        levelTile[512], *curTile;
 int         curPos;
@@ -671,12 +670,12 @@ void DoSpace()
 void DoWallTop()
 {
     curPos = Video_Tile(curPos, curTile->gfx, curTile->paper, curTile->ink, curTile->data);
-    Video_Tile(curPos, gfxSolid, 0x0, levelBG, 8 - curTile->data);
+    Video_Tile(curPos, gfxSpace, levelBG, 0x0, 8 - curTile->data);
 }
 
 void DoWallBottom()
 {
-    curPos = Video_Tile(curPos, gfxSolid, 0x0, levelBG, curTile->data);
+    curPos = Video_Tile(curPos, gfxSpace, levelBG, 0x0, curTile->data);
     Video_Tile(curPos, curTile->gfx + curTile->data, curTile->paper, curTile->ink, 8 - curTile->data);
 }
 
