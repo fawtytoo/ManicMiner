@@ -1,0 +1,15 @@
+int System_Init(void);
+void System_Quit(void);
+void System_UpdateVideo(void);
+void System_LockVideo(void);
+void System_UnlockVideo(void);
+void System_Border(int);
+void System_SetPixel(int, int);
+int System_GetEvent(int *);
+int System_IsKeyLeft(void);
+int System_IsKeyRight(void);
+int System_IsKeyJump(void);
+void System_UpdateKeys(void);
+void System_LockAudio(void);
+void System_UnlockAudio(void);
+void System_Delay(void);
