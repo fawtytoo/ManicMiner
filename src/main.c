@@ -1,4 +1,4 @@
-#include "common.h"
+#include "misc.h"
 #include "system.h"
 #include "video.h"
 #include "audio.h"
@@ -6,7 +6,7 @@
 int     gameRunning = 1, gameInput;
 
 int     videoFlash = 0;
-int     videoSync = 0;
+int     videoSync;
 
 EVENT   Action = Loader_Action;
 EVENT   Responder = DoNothing;
@@ -27,10 +27,23 @@ void DoQuit()
 
 int main()
 {
-    int flash = 0;
+    TIMER   timer;
+    int     flash = 0;
+    int     frame = 0;
+    int     rate;
+    int     sync;
 
     Audio_Init();
-    System_Init();
+
+    rate = System_Init();
+    sync = rate > TICKRATE;
+    Timer_Set(&timer, TICKRATE, rate);
+    if (timer.rate < 1)
+    {
+        timer.rate = 1;
+        timer.remainder = 0;
+    }
+    frame = timer.rate;
 
     while (gameRunning)
     {
@@ -43,15 +56,6 @@ int main()
 
         Ticker();
         Drawer();
-        Video_Draw();
-        System_UpdateVideo();
-
-        do
-        {
-            System_Delay();
-        }
-        while (!videoSync);
-        videoSync = 0;
 
         flash++;
         if (flash == 20)
@@ -59,6 +63,24 @@ int main()
             flash = 0;
             videoFlash = 1 - videoFlash;
         }
+
+        if (--frame > 0)
+        {
+            continue;
+        }
+
+        frame = Timer_Update(&timer);
+
+        Video_Draw();
+
+        videoSync = 0;
+        do
+        {
+            System_Delay();
+        }
+        while (!videoSync && sync);
+
+        System_UpdateVideo();
     }
 
     System_Quit();

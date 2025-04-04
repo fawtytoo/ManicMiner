@@ -188,7 +188,7 @@ void System_Quit()
     SDL_Quit();
 }
 
-void System_Init()
+int System_Init()
 {
     SDL_AudioSpec   want;
     SDL_DisplayMode mode;
@@ -203,7 +203,7 @@ void System_Init()
     multiply = Video_Viewport(mode.w, mode.h, &sdlViewport.x, &sdlViewport.y, &sdlViewport.w, &sdlViewport.h);
 
     sdlWindow = SDL_CreateWindow("Manic Miner", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_ACCELERATED);
+    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_TARGETTEXTURE | SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     sdlTarget = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, WIDTH * multiply, HEIGHT * multiply);
@@ -221,4 +221,6 @@ void System_Init()
     SDL_PauseAudioDevice(sdlAudio, 0);
 
     keyState = SDL_GetKeyboardState(NULL);
+
+    return mode.refresh_rate;
 }

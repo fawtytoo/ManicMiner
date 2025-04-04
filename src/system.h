@@ -1,4 +1,4 @@
-void System_Init(void);
+int System_Init(void);
 void System_Quit(void);
 void System_UpdateVideo(void);
 void System_LockVideo(void);
