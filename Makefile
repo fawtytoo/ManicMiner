@@ -10,7 +10,7 @@ LDFLAGS = `sdl2-config --libs`
 SRC = src
 O = linux
 
-OBJS = $(O)/main.o $(O)/system.o $(O)/video.o $(O)/loader.o $(O)/title.o $(O)/audio.o $(O)/miner.o $(O)/levels.o $(O)/game.o $(O)/portal.o $(O)/trans.o $(O)/gameover.o $(O)/robots.o $(O)/victory.o $(O)/cheat.o $(O)/die.o $(O)/spg.o $(O)/misc.o
+OBJS = $(O)/main.o $(O)/video.o $(O)/loader.o $(O)/title.o $(O)/audio.o $(O)/miner.o $(O)/levels.o $(O)/game.o $(O)/portal.o $(O)/trans.o $(O)/gameover.o $(O)/robots.o $(O)/victory.o $(O)/cheat.o $(O)/die.o $(O)/spg.o $(O)/misc.o
 
 BUILD = -DBUILD=\"v1.0.$(shell date +'%y.%m.%d')\"
 
