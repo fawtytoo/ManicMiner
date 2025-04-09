@@ -4,7 +4,6 @@
 
 #define TILE2PIXEL(t)   (((t & 992) << 6) | ((t & 31) << 3))
 
-void Video_Draw(void);
 void Video_CopyColour(BYTE *, int, int);
 void Video_CopyBytes(BYTE *);
 void Video_Write(int, char *);

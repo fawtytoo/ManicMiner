@@ -54,8 +54,10 @@ int main()
             Responder();
         }
 
+        System_LockVideo();
         Ticker();
         Drawer();
+        System_UnlockVideo();
 
         flash++;
         if (flash == 20)
@@ -70,8 +72,6 @@ int main()
         }
 
         frame = Timer_Update(&timer);
-
-        Video_Draw();
 
         videoSync = 0;
         do
