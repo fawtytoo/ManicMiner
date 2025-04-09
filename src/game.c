@@ -1,7 +1,6 @@
-#include "common.h"
+#include "misc.h"
 #include "audio.h"
 #include "video.h"
-#include "system.h"
 
 #include "game.h"
 

@@ -1,5 +1,4 @@
 #include "misc.h"
-#include "system.h"
 #include "game.h"
 #include "video.h"
 
