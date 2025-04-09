@@ -21,3 +21,4 @@ void Audio_Music(int, int);
 void Audio_Play(int);
 void Audio_MinerSfx(int, int);
 void Audio_Sfx(int);
+void Audio_Drawer(void);

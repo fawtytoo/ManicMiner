@@ -34,6 +34,25 @@
 
 #define KEYBOARD    16
 
+typedef struct _DRAW    DRAW;
+struct _DRAW
+{
+    DRAW    *next;
+    void (*Drawer)(int, BYTE);
+    int     pos;
+    BYTE    attr;
+};
+
+DRAW    drawList[11] =
+{
+    {.next = &drawList[1]}, {.next = &drawList[2]}, {.next = &drawList[3]},
+    {.next = &drawList[4]}, {.next = &drawList[5]}, {.next = &drawList[6]},
+    {.next = &drawList[7]}, {.next = &drawList[8]}, {.next = &drawList[9]},
+    {.next = &drawList[10]}, {.next = &drawList[0]}
+};
+
+DRAW    *drawStart = &drawList[0], *drawEnd = &drawList[0];
+
 typedef struct
 {
     int type;
@@ -411,9 +430,6 @@ TIMER   timerTick;
 CHANNEL *curChannel;
 SFX     *curSfx;
 
-EVENT   NoteOff[2] = {DoNothing, DoNothing};
-EVENT   NoteOn[2] = {DoNothing, DoNothing};
-
 void DoPhase()
 {
     UINT    phase = curChannel->phase >> 31;
@@ -579,24 +595,21 @@ void MusicReset()
     musicClock = 0;
 }
 
-void DoNoteOffWhite()
+void DrawListAdd(int type, int state)
 {
-    Video_PianoKey(KEYBOARD * 32 + keyPos[*curMusic].pos, 0x7);
+    drawEnd->Drawer = state == 0 ? Video_PianoKey : Video_TilePaper;
+    drawEnd->pos = KEYBOARD * 32 + keyPos[*curMusic].pos;
+    drawEnd->attr = (BYTE [4]){0x7, 0x0, 0x5, 0x2}[type | state];
+    drawEnd = drawEnd->next;
 }
 
-void DoNoteOffBlack()
+void Audio_Drawer()
 {
-    Video_TilePaper(KEYBOARD * 32 + keyPos[*curMusic].pos, 0x0);
-}
-
-void DoNoteOnWhite()
-{
-    Video_PianoKey(KEYBOARD * 32 + keyPos[*curMusic].pos, 0x5);
-}
-
-void DoNoteOnBlack()
-{
-    Video_TilePaper(KEYBOARD * 32 + keyPos[*curMusic].pos, 0x2);
+    while (drawStart != drawEnd)
+    {
+        drawStart->Drawer(drawStart->pos, drawStart->attr);
+        drawStart = drawStart->next;
+    }
 }
 
 void Audio_Output(short output[2])
@@ -624,7 +637,7 @@ void Audio_Output(short output[2])
                         continue;
 
                       case EV_DRAW:
-                        NoteOn[data >> 8]();
+                        DrawListAdd(2, data >> 8);
                         // FALLTHRU
                       case EV_NOTEON:
                         musicChannel[channel]->frequency = frequencyTable[*curMusic++];
@@ -632,7 +645,7 @@ void Audio_Output(short output[2])
                         break;
 
                       case EV_UNDRAW:
-                        NoteOff[data >> 8]();
+                        DrawListAdd(0, data >> 8);
                         curMusic++;
                         // FALLTHRU
                       case EV_NOTEOFF:
@@ -700,15 +713,12 @@ void Audio_Music(int music, int playing)
     audioSamples = 0;
     Audio_Play(playing);
 
+    drawStart = drawEnd;
+
     System_UnlockAudio();
 }
 
 void Audio_Init()
 {
     Timer_Set(&timerTick, SAMPLERATE, TICKRATE);
-
-    NoteOff[0] = DoNoteOffWhite;
-    NoteOff[1] = DoNoteOffBlack;
-    NoteOn[0] = DoNoteOnWhite;
-    NoteOn[1] = DoNoteOnBlack;
 }

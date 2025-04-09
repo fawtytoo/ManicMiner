@@ -13,6 +13,8 @@ const BYTE          *keyState;
 UINT                *texPixels;
 int                 texPitch;
 
+SDL_Color           sdlColor;
+
 void System_Delay()
 {
     SDL_Delay(1);
@@ -153,7 +155,9 @@ void System_SetPixel(int point, int index)
 
 void System_Border(int index)
 {
-    SDL_SetRenderDrawColor(sdlRenderer, videoPalette[index] >> 16, (videoPalette[index] >> 8) & 0xff, videoPalette[index] & 0xff, 0xff);
+    sdlColor.r = videoPalette[index] >> 16;
+    sdlColor.g = (videoPalette[index] >> 8) & 0xff;
+    sdlColor.b = videoPalette[index] & 0xff;
 }
 
 void System_LockVideo()
@@ -168,6 +172,7 @@ void System_UnlockVideo()
 
 void System_UpdateVideo()
 {
+    SDL_SetRenderDrawColor(sdlRenderer, sdlColor.r, sdlColor.g, sdlColor.b, 0xff);
     SDL_RenderClear(sdlRenderer);
     SDL_SetRenderTarget(sdlRenderer, sdlTarget);
     SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);

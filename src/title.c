@@ -186,7 +186,7 @@ void Title_Action()
 {
     Responder = DoTitleResponder;
     Ticker = DoTitleInit;
-    Drawer = DoNothing;
+    Drawer = Audio_Drawer;
 
     Action = DoTitleAction;
 }
