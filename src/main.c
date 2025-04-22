@@ -20,7 +20,6 @@ SDL_Color           sdlColor;
 int     gameRunning = 1, gameInput;
 
 int     videoFlash = 0;
-int     videoSync;
 
 EVENT   Action = Loader_Action;
 EVENT   Responder = DoNothing;
@@ -187,7 +186,6 @@ int main()
     TIMER   timer;
     int     flash = 0;
     int     frame = 0;
-    int     sync;
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -219,43 +217,36 @@ int main()
 
     Audio_Init();
 
-    sync = mode.refresh_rate > TICKRATE;
     Timer_Set(&timer, TICKRATE, mode.refresh_rate);
-    if (timer.rate < 1)
-    {
-        timer.rate = 1;
-        timer.remainder = 0;
-    }
-    frame = timer.rate;
 
     while (gameRunning)
     {
-        Action();
-
-        while (System_GetEvent(&gameInput))
-        {
-            Responder();
-        }
-
         SDL_LockTextureToSurface(sdlTexture, NULL, &sdlSurface);
         sdlPixels = (UINT *)sdlSurface->pixels;
-        Ticker();
-        Drawer();
-        SDL_UnlockTexture(sdlTexture);
-
-        flash++;
-        if (flash == 20)
-        {
-            flash = 0;
-            videoFlash = 1 - videoFlash;
-        }
-
-        if (--frame > 0)
-        {
-            continue;
-        }
 
         frame = Timer_Update(&timer);
+
+        while (frame--)
+        {
+            Action();
+
+            while (System_GetEvent(&gameInput))
+            {
+                Responder();
+            }
+
+            Ticker();
+            Drawer();
+
+            flash++;
+            if (flash == 20)
+            {
+                flash = 0;
+                videoFlash = 1 - videoFlash;
+            }
+        }
+
+        SDL_UnlockTexture(sdlTexture);
 
         SDL_SetRenderDrawColor(sdlRenderer, sdlColor.r, sdlColor.g, sdlColor.b, 0xff);
         SDL_RenderClear(sdlRenderer);
@@ -263,13 +254,6 @@ int main()
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
         SDL_SetRenderTarget(sdlRenderer, NULL);
         SDL_RenderCopy(sdlRenderer, sdlTarget, NULL, &sdlViewport);
-
-        videoSync = 0;
-        do
-        {
-            SDL_Delay(1);
-        }
-        while (!videoSync && sync);
 
         SDL_RenderPresent(sdlRenderer);
     }
