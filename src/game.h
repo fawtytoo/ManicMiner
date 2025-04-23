@@ -77,9 +77,9 @@ extern WORD minerSprite[8][16];
 void Miner_Init(void);
 void DoMinerTicker(void);
 void DoMinerDrawer(void);
-void Miner_SetSeq(int);
+void Miner_SetSeq(int, int);
 void Miner_IncSeq(void);
-int Miner_GetSeq(void);
+void Miner_DrawSeqSprite(int, BYTE, BYTE);
 
 // portal
 void Portal_Init(void);

@@ -81,20 +81,23 @@ BYTE    minerInk;
 
 BYTE    minerSeqIndex;
 int     minerSeq[8] = {0, 1, 2, 3, 7, 6, 5, 4};
+TIMER   minerTimer;
 
-void Miner_SetSeq(int index)
+void Miner_SetSeq(int index, int speed)
 {
-    minerSeqIndex = index << 5;
+    Timer_Set(&minerTimer, 1, speed);
+    minerSeqIndex = index;
 }
 
 void Miner_IncSeq()
 {
-    minerSeqIndex += 4;
+    minerSeqIndex += Timer_Update(&minerTimer);
+    minerSeqIndex &= 7;
 }
 
-int Miner_GetSeq()
+void Miner_DrawSeqSprite(int pos, BYTE paper, BYTE ink)
 {
-    return minerSeq[minerSeqIndex >> 5];
+    Video_Sprite(pos, minerSprite[minerSeq[minerSeqIndex]], paper, ink);
 }
 
 int IsSolid(int tile)

@@ -126,7 +126,7 @@ void DoTitleDrawer()
 {
     Video_WriteLarge(160 * WIDTH, textPos, textTicker);
 
-    Video_Sprite(MINER, minerSprite[Miner_GetSeq()], 0xa, 0x7);
+    Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 }
 
 void DoTitleInit()
@@ -148,8 +148,8 @@ void DoTitleInit()
 
     textPos = WIDTH;
 
-    Miner_SetSeq(4);
-    Video_Sprite(MINER, minerSprite[Miner_GetSeq()], 0xa, 0x7);
+    Miner_SetSeq(4, 8);
+    Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 
     Audio_Music(MUS_TITLE, MUS_PLAY);
 

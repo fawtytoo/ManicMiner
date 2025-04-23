@@ -52,7 +52,7 @@ void Game_DrawLives()
 
     for (l = 0; l < gameLives - 1; l++, pos += 16)
     {
-        Video_Sprite(pos, minerSprite[Miner_GetSeq()], 0x0, 0x5);
+        Miner_DrawSeqSprite(pos, 0x0, 0x5);
     }
 }
 
@@ -163,6 +163,11 @@ void Game_GotItem(int tile)
 
 void DoGameDrawer()
 {
+    if (gameMusic == MUS_PLAY)
+    {
+        Game_DrawLives();
+    }
+
     Game_DrawAir();
     Game_ExtraLife();
 
@@ -176,11 +181,6 @@ void DoGameDrawer()
     Miner_Drawer();
     Spg_Drawer();
     Portal_Drawer();
-
-    if (gameMusic == MUS_PLAY)
-    {
-        Game_DrawLives();
-    }
 }
 
 void DoGameDrawOnce()
@@ -192,6 +192,11 @@ void DoGameDrawOnce()
 
 void DoGameTicker()
 {
+    if (gameMusic == MUS_PLAY)
+    {
+        Miner_IncSeq();
+    }
+
     if (gameFrame != 0)
     {
         return;
@@ -209,12 +214,6 @@ void DoGameTicker()
     if (gameAir == 0)
     {
         Action = Die_Action;
-    }
-
-    if (gameMusic == MUS_PLAY)
-    {
-        Miner_IncSeq();
-        Miner_IncSeq();
     }
 
     if (gameDemo == 0)
@@ -348,7 +347,7 @@ void Game_GameReset()
     Game_ExtraLife = DoNothing;
     Game_DrawHiScore();
 
-    Miner_SetSeq(4);
+    Miner_SetSeq(4, 20);
     Game_DrawLives();
 
     if (cheatEnabled)
