@@ -23,8 +23,9 @@ int     levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1
 int     gameScore, gameHiScore = 0;
 int     gameExtraLifeCount;
 
-int     gameFrameAdj[5] = {1, 2, 3, 4, 0};
 int     gameFrame;
+TIMER   gameTimer;
+
 EVENT   Game_ExtraLife = DoNothing;
 EVENT   Game_DrawAir = DoNothing;
 EVENT   Game_Unpause = DoNothing;
@@ -32,11 +33,6 @@ EVENT   Game_Unpause = DoNothing;
 EVENT   Spg_Ticker, Spg_Drawer;
 EVENT   Miner_Ticker, Miner_Drawer;
 EVENT   Portal_Ticker;
-
-void DoGameFrameAdjust()
-{
-    gameFrame = gameFrameAdj[gameFrame];
-}
 
 void Game_CheckHighScore()
 {
@@ -171,7 +167,7 @@ void DoGameDrawer()
     Game_DrawAir();
     Game_ExtraLife();
 
-    if (gameFrame != 0)
+    if (gameFrame == 0)
     {
         return;
     }
@@ -197,7 +193,8 @@ void DoGameTicker()
         Miner_IncSeq();
     }
 
-    if (gameFrame != 0)
+    gameFrame = Timer_Update(&gameTimer);
+    if (gameFrame == 0)
     {
         return;
     }
@@ -235,14 +232,12 @@ void GamePause(int paused)
 
     if (paused)
     {
-        Action = DoNothing;
         Ticker = DoNothing;
         Drawer = DoNothing;
         Audio_Play(MUS_STOP);
     }
     else
     {
-        Action = DoGameFrameAdjust;
         Ticker = DoGameTicker;
         Drawer = DoGameDrawer;
         Audio_Play(gameMusic);
@@ -293,7 +288,7 @@ void DoGameInit()
 
     System_Border(levelBorder[gameLevel]);
 
-    gameFrame = 0;
+    Timer_Set(&gameTimer, 12, TICKRATE);
 
     if (gamePaused == 0)
     {
@@ -373,8 +368,6 @@ void Game_ChangeLevel()
 {
     Ticker = DoGameInit;
     Drawer = gamePaused ? DoGameDrawOnce : DoGameDrawer;
-
-    Action = gamePaused ? DoNothing : DoGameFrameAdjust;
 }
 
 void Game_Action()
@@ -383,5 +376,5 @@ void Game_Action()
     Ticker = DoGameInit;
     Drawer = DoGameDrawer;
 
-    Action = DoGameFrameAdjust;
+    Action = DoNothing;
 }
