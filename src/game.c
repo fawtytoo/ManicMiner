@@ -368,6 +368,8 @@ void Game_ChangeLevel()
 {
     Ticker = DoGameInit;
     Drawer = gamePaused ? DoGameDrawOnce : DoGameDrawer;
+
+    Action = DoNothing;
 }
 
 void Game_Action()
