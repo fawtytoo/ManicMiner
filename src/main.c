@@ -174,9 +174,8 @@ int main()
     SDL_AudioSpec   want;
     SDL_DisplayMode mode;
     int             multiply;
-    TIMER   timer;
-    int     flash = 0;
-    int     frame = 0;
+    TIMER           timerFlash, timerFrame;
+    int             frame = 0;
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
@@ -210,14 +209,15 @@ int main()
 
     Audio_Init();
 
-    Timer_Set(&timer, TICKRATE, mode.refresh_rate);
+    Timer_Set(&timerFrame, TICKRATE, mode.refresh_rate);
+    Timer_Set(&timerFlash, 25, TICKRATE * 8); // 25 = 3.125 * 8
 
     while (gameRunning)
     {
         SDL_LockTextureToSurface(sdlTexture, NULL, &sdlSurface);
         sdlPixels = (UINT *)sdlSurface->pixels;
 
-        frame = Timer_Update(&timer);
+        frame = Timer_Update(&timerFrame);
 
         while (frame--)
         {
@@ -234,12 +234,7 @@ int main()
             Ticker();
             Drawer();
 
-            flash++;
-            if (flash == 20)
-            {
-                flash = 0;
-                videoFlash = 1 - videoFlash;
-            }
+            videoFlash ^= Timer_Update(&timerFlash);
         }
 
         SDL_UnlockTexture(sdlTexture);
