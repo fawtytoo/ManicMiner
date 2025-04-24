@@ -2,8 +2,8 @@
 #include "game.h"
 #include "video.h"
 
-int spgTrace[48];
-int spgCount;
+static int      spgTrace[48];
+static int      spgCount;
 
 void DoSpgDrawer()
 {

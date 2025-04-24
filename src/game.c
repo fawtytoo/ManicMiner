@@ -6,33 +6,35 @@
 
 #define AIR     138 * WIDTH + 28
 
-int     gamePaused = 0, gameMusic = MUS_PLAY;
-int     gameLevel;
-int     gameTicks;
-int     gameDemo = 1;
-int     gameLives;
-int     gameAir, gameAirOld;
+static int      gameMusic = MUS_PLAY;
 
-int     itemData[20] = {5, 5, 5, 5, 5, 5, 5, 4, 1, 5, 5, 5, 5, 4, 3, 4, 5, 1, 3, 5};
-int     airData[20] = {224, 224, 220, 220, 220, 220, 220, 220, 220, 224, 220, 220, 224, 224, 224, 224, 220, 220, 224, 224};
+static int      itemData[20] = {5, 5, 5, 5, 5, 5, 5, 4, 1, 5, 5, 5, 5, 4, 3, 4, 5, 1, 3, 5};
+static int      airData[20] = {224, 224, 220, 220, 220, 220, 220, 220, 220, 224, 220, 220, 224, 224, 224, 224, 220, 220, 224, 224};
 
-int     itemCount;
+static int      itemCount;
 
-int     levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1, 0x5, 0xa, 0x1, 0xb, 0xd, 0x8, 0x1, 0x0, 0x5};
+static int      levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1, 0x5, 0xa, 0x1, 0xb, 0xd, 0x8, 0x1, 0x0, 0x5};
 
-int     gameScore, gameHiScore = 0;
-int     gameExtraLifeCount;
+static int      gameScore, gameHiScore = 0;
+static int      gameExtraLifeCount;
 
-int     gameFrame;
-TIMER   gameTimer;
+static int      gameFrame;
+static TIMER    gameTimer;
 
-EVENT   Game_ExtraLife = DoNothing;
-EVENT   Game_DrawAir = DoNothing;
-EVENT   Game_Unpause = DoNothing;
+int             gamePaused = 0;
+int             gameLevel;
+int             gameTicks;
+int             gameDemo = 1;
+int             gameLives;
+int             gameAir, gameAirOld;
 
-EVENT   Spg_Ticker, Spg_Drawer;
-EVENT   Miner_Ticker, Miner_Drawer;
-EVENT   Portal_Ticker;
+EVENT           Game_ExtraLife = DoNothing;
+EVENT           Game_DrawAir = DoNothing;
+EVENT           Game_Unpause = DoNothing;
+
+EVENT           Spg_Ticker, Spg_Drawer;
+EVENT           Miner_Ticker, Miner_Drawer;
+EVENT           Portal_Ticker;
 
 void Game_CheckHighScore()
 {
@@ -52,7 +54,7 @@ void Game_DrawLives()
     }
 }
 
-void DoDrawAir()
+static void DoDrawAir()
 {
     gameAirOld--;
     Video_AirBar(AIR + gameAirOld, 0x7);
@@ -78,7 +80,7 @@ void Game_ReduceAir(int amount)
     }
 }
 
-void GameDrawScore(int pos, int x, int score, BYTE ink)
+static void GameDrawScore(int pos, int x, int score, BYTE ink)
 {
     int     digit = 6, i = 9;
     char    text[11] = "\x1\x0\x2\x0" ".....0";
@@ -103,7 +105,7 @@ void Game_DrawHiScore()
     GameDrawScore(SCORE, 5 * 8 + 4, gameHiScore, 0x6);
 }
 
-void DoExtraLife()
+static void DoExtraLife()
 {
     gameExtraLifeCount--;
 
@@ -157,7 +159,7 @@ void Game_GotItem(int tile)
     Portal_Ticker = DoPortalTicker;
 }
 
-void DoGameDrawer()
+static void DoGameDrawer()
 {
     if (gameMusic == MUS_PLAY)
     {
@@ -179,14 +181,14 @@ void DoGameDrawer()
     Portal_Drawer();
 }
 
-void DoGameDrawOnce()
+static void DoGameDrawOnce()
 {
     DoGameDrawer();
 
     Drawer = DoNothing;
 }
 
-void DoGameTicker()
+static void DoGameTicker()
 {
     if (gameMusic == MUS_PLAY)
     {
@@ -226,7 +228,7 @@ void DoGameTicker()
     Action = Trans_Action;
 }
 
-void GamePause(int paused)
+static void GamePause(int paused)
 {
     gamePaused = paused;
 
@@ -244,13 +246,13 @@ void GamePause(int paused)
     }
 }
 
-void DoGameUnpause()
+static void DoGameUnpause()
 {
     GamePause(0);
     Game_Unpause = DoNothing;
 }
 
-void DoGameInit()
+static void DoGameInit()
 {
     int x;
 
@@ -301,12 +303,12 @@ void DoGameInit()
     }
 }
 
-void DoGameDemoResponder()
+static void DoGameDemoResponder()
 {
     Action = Title_Action;
 }
 
-void DoGameResponder()
+static void DoGameResponder()
 {
     if (gameInput == KEY_PAUSE)
     {

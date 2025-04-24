@@ -3,9 +3,9 @@
 #include "game.h"
 #include "audio.h"
 
-int victoryTimer;
+static int      victoryTimer;
 
-void DoVictoryTicker()
+static void DoVictoryTicker()
 {
     if (victoryTimer-- == 0)
     {
@@ -13,7 +13,7 @@ void DoVictoryTicker()
     }
 }
 
-void DoVictoryInit()
+static void DoVictoryInit()
 {
     System_Border(0);
 

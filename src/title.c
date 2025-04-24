@@ -5,7 +5,7 @@
 
 #define MINER       80 * WIDTH + 29 * 8
 
-BYTE    titlePixels[2048] =
+static BYTE     titlePixels[2048] =
 {
     160, 255, 255, 255, 255, 255, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0,
     224, 255, 255, 255, 255, 255, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 62, 7, 224, 124, 1, 0, 0, 0, 0, 0,
@@ -73,7 +73,7 @@ BYTE    titlePixels[2048] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 252, 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-BYTE    titleColour[256] =
+static BYTE     titleColour[256] =
 {
     0x5d, 0xcd, 0xcd, 0xcd, 0x4d, 0x4d, 0x5d, 0x50, 0x50, 0x50, 0x50, 0x50, 0x57, 0x57, 0x57, 0x57, 0x57, 0x50, 0x50, 0x50, 0x50, 0x5e, 0xfe, 0xfe, 0xfe, 0xfe, 0x5e, 0x50, 0x50, 0x50, 0x50, 0x50,
     0x5d, 0xcd, 0xfd, 0xfd, 0xfd, 0xcd, 0x5d, 0x50, 0x50, 0x57, 0x50, 0x50, 0x57, 0x57, 0x57, 0x57, 0x57, 0x50, 0x50, 0x50, 0x50, 0x5e, 0x87, 0xb9, 0xb9, 0x87, 0x5e, 0x50, 0x50, 0x52, 0x52, 0x50,
@@ -85,9 +85,9 @@ BYTE    titleColour[256] =
     0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0xfc, 0xfc, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c
 };
 
-char    textTicker[] = "\x1\x0\x2\x2" "M" "\x2\x6" "A" "\x2\x4" "N" "\x2\x5" "I" "\x2\x3" "C " "\x2\x5" "M" "\x2\x3" "I" "\x2\x2" "N" "\x2\x6" "E" "\x2\x4" "R" "\x2\x7" "   (C) Software Projects Ltd. 1983   By Matthew Smith                                " "\x2\x5" "Cursor Keys = Left & Right   " "\x2\x6" "Space = Jump   " "\x2\x3" "Pause/Tab = Pause   " "\x2\x4" "M = Tune On/Off                                " "\x2\x7" "Guide " "\x2\x5" "M" "\x2\x3" "i" "\x2\x2" "n" "\x2\x6" "e" "\x2\x4" "r" "\x2\x7" " Willy through 20 " "\x2\x2" "lethal " "\x2\x7" "caverns ...";
+static char     textTicker[] = "\x1\x0\x2\x2" "M" "\x2\x6" "A" "\x2\x4" "N" "\x2\x5" "I" "\x2\x3" "C " "\x2\x5" "M" "\x2\x3" "I" "\x2\x2" "N" "\x2\x6" "E" "\x2\x4" "R" "\x2\x7" "   (C) Software Projects Ltd. 1983   By Matthew Smith                                " "\x2\x5" "Cursor Keys = Left & Right   " "\x2\x6" "Space = Jump   " "\x2\x3" "Pause/Tab = Pause   " "\x2\x4" "M = Tune On/Off                                " "\x2\x7" "Guide " "\x2\x5" "M" "\x2\x3" "i" "\x2\x2" "n" "\x2\x6" "e" "\x2\x4" "r" "\x2\x7" " Willy through 20 " "\x2\x2" "lethal " "\x2\x7" "caverns ...";
 
-int     textPos, textEnd = ((int)sizeof(textTicker) - 50) * -8;
+static int      textPos, textEnd = ((int)sizeof(textTicker) - 50) * -8;
 
 void Title_ScreenCopy()
 {
@@ -95,7 +95,7 @@ void Title_ScreenCopy()
     Video_CopyColour(titleColour, 0, 256);
 }
 
-void DoStartGame()
+static void DoStartGame()
 {
     Video_PixelFill(128 * WIDTH, 16 * WIDTH, 0x7);
 
@@ -109,7 +109,7 @@ void DoStartGame()
     Game_Action();
 }
 
-void DoTitleTicker()
+static void DoTitleTicker()
 {
     textPos -= 2;
 
@@ -122,14 +122,14 @@ void DoTitleTicker()
     Miner_IncSeq();
 }
 
-void DoTitleDrawer()
+static void DoTitleDrawer()
 {
     Video_WriteLarge(160 * WIDTH, textPos, textTicker);
 
     Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 }
 
-void DoTitleInit()
+static void DoTitleInit()
 {
     Title_ScreenCopy();
     Video_PixelFill(64 * WIDTH, 64 * WIDTH, 0xa);
@@ -156,7 +156,7 @@ void DoTitleInit()
     Ticker = DoNothing;
 }
 
-void DoTitleResponder()
+static void DoTitleResponder()
 {
     if (gameInput == KEY_ENTER)
     {
@@ -169,7 +169,7 @@ void DoTitleResponder()
     }
 }
 
-void DoTitleAction()
+static void DoTitleAction()
 {
     if (audioMusicPlaying)
     {

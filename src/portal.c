@@ -8,7 +8,7 @@ typedef struct
     BYTE    paper, ink;
 } PORTAL;
 
-WORD    portalGfx[20][16] =
+static WORD     portalGfx[20][16] =
 {
     {65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535},
     {65535, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 65535},
@@ -32,7 +32,7 @@ WORD    portalGfx[20][16] =
     {65535, 63519, 57351, 49155, 50115, 34785, 34785, 34785, 50115, 49539, 57735, 45453, 33153, 33153, 33153, 65535}
 };
 
-PORTAL  portalInfo[20] =
+static PORTAL  portalInfo[20] =
 {
     {29, 13, 0x7, 0x5}, {29, 13, 0x4, 0xf}, {29, 11, 0xa, 0xe}, {29, 1, 0xa, 0xc}, {15, 13, 0x1, 0x0},
     {29, 0, 0x1, 0xa}, {15, 13, 0xe, 0xf}, {15, 13, 0x1, 0x6}, {1, 0, 0xc, 0xf}, {12, 13, 0x1, 0x5},
@@ -40,10 +40,10 @@ PORTAL  portalInfo[20] =
     {12, 5, 0xc, 0x2}, {29, 1, 0x6, 0x2}, {29, 0, 0x8, 0xd}, {1, 1, 0x5, 0x6}, {19, 5, 0xf, 0xc}
 };
 
-int     portalTile, portalPos;
-BYTE    portalPaper[2], portalInk[2];
-WORD    *portalSprite;
-int     portalFlash;
+static int     portalTile, portalPos;
+static BYTE    portalPaper[2], portalInk[2];
+static WORD    *portalSprite;
+static int     portalFlash;
 
 void DoPortalTicker()
 {

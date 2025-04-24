@@ -3,20 +3,20 @@
 #include "audio.h"
 #include "game.h"
 
-WORD    plinthSprite[16] = {65535, 29262, 35409, 43605, 19026, 4680, 8772, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836};
-WORD    bootSprite[16] = {10944, 13632, 16320, 2304, 2304, 8064, 4224, 4224, 4480, 8768, 8376, 22820, 17474, 17410, 17410, 65535};
+static WORD     plinthSprite[16] = {65535, 29262, 35409, 43605, 19026, 4680, 8772, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836};
+static WORD     bootSprite[16] = {10944, 13632, 16320, 2304, 2304, 8064, 4224, 4224, 4480, 8768, 8376, 22820, 17474, 17410, 17410, 65535};
 
-int     bootTicks;
+static int      bootTicks;
 
-char    textGame[18] = "\x1\x0\x2\x0" "G " "\x2\x0" "a " "\x2\x0" "m " "\x2\x0" "e";
-char    textOver[18] = "\x1\x0\x2\x0" "O " "\x2\x0" "v " "\x2\x0" "e " "\x2\x0" "r";
+static char     textGame[18] = "\x1\x0\x2\x0" "G " "\x2\x0" "a " "\x2\x0" "m " "\x2\x0" "e";
+static char     textOver[18] = "\x1\x0\x2\x0" "O " "\x2\x0" "v " "\x2\x0" "e " "\x2\x0" "r";
 
 void Gameover_DrawCheat()
 {
     Video_Sprite(LIVES + WIDTH - 3 * 8, bootSprite, 0x0, 0x5);
 }
 
-void DoGameoverDrawer()
+static void DoGameoverDrawer()
 {
     if (bootTicks <= 96)
     {
@@ -33,7 +33,7 @@ void DoGameoverDrawer()
     Video_WriteLarge(48 * WIDTH, 18 * 8, textOver);
 }
 
-void DoGameoverTicker()
+static void DoGameoverTicker()
 {
     int c = bootTicks >> 2;
 
@@ -54,7 +54,7 @@ void DoGameoverTicker()
     }
 }
 
-void DoGameoverInit()
+static void DoGameoverInit()
 {
     Game_CheckHighScore();
 

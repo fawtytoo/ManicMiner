@@ -3,11 +3,11 @@
 #include "game.h"
 #include "audio.h"
 
-WORD    dieBlank[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static WORD     dieBlank[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-int     dieLevel;
+static int      dieLevel;
 
-void DoDieDrawer()
+static void DoDieDrawer()
 {
     Video_LevelInkFill(dieLevel >> 1);
 
@@ -15,7 +15,7 @@ void DoDieDrawer()
     Game_DrawAir(); // allows the air bar to catch up if necessary
 }
 
-void DoDieTicker()
+static void DoDieTicker()
 {
     if (dieLevel-- > 0)
     {
@@ -33,7 +33,7 @@ void DoDieTicker()
     Action = Game_Action;
 }
 
-void DoDieInit()
+static void DoDieInit()
 {
     gameLives--;
 

@@ -19,7 +19,7 @@ typedef struct
 }
 ROBOT;
 
-WORD    robotSprite[29][8][16] =
+static WORD     robotSprite[29][8][16] =
 {
     {
         {7968, 14816, 6624, 3872, 40704, 24448, 65472, 24064, 40896, 8064, 3584, 7936, 48032, 29120, 8320, 4352},
@@ -222,15 +222,15 @@ WORD    robotSprite[29][8][16] =
     }
 };
 
-void DoRobotLeft();
-void DoRobotRight();
-void DoRobotUp();
-void DoRobotDown();
-void DoRobotKong();
-void DoRobotSkylab();
-void DoRobotDraw();
+static void DoRobotLeft();
+static void DoRobotRight();
+static void DoRobotUp();
+static void DoRobotDown();
+static void DoRobotKong();
+static void DoRobotSkylab();
+static void DoRobotDraw();
 
-ROBOT   robotStart[20][8] =
+static ROBOT    robotStart[20][8] =
 {
     {
         {8, 7, 64, 120, DoRobotRight, DoRobotDraw, 0, 0, 0x6, 7, 0, 0},
@@ -375,9 +375,9 @@ ROBOT   robotStart[20][8] =
     }
 };
 
-int     robotAlign[8] = {4, 6, 6, 6, 6, 6, 6, 6};
+static int      robotAlign[8] = {4, 6, 6, 6, 6, 6, 6, 6};
 
-ROBOT   robotThis[8], *curRobot;
+static ROBOT    robotThis[8], *curRobot;
 
 void Robots_SetSpgTiles(void)
 {
@@ -396,7 +396,7 @@ void Robots_Barrel()
     robotThis[2].max = 18 * 8;
 }
 
-void DoRobotLeft()
+static void DoRobotLeft()
 {
     if (gameTicks & curRobot->speed)
     {
@@ -419,7 +419,7 @@ void DoRobotLeft()
     curRobot->frame = 0;
 }
 
-void DoRobotRight()
+static void DoRobotRight()
 {
     if (gameTicks & curRobot->speed)
     {
@@ -442,7 +442,7 @@ void DoRobotRight()
     curRobot->frame = 7;
 }
 
-void DoRobotUp()
+static void DoRobotUp()
 {
     int     pos = curRobot->y - curRobot->speed;
 
@@ -463,7 +463,7 @@ void DoRobotUp()
     curRobot->frame++;
 }
 
-void DoRobotDown()
+static void DoRobotDown()
 {
     int     pos = curRobot->y + curRobot->speed;
 
@@ -484,13 +484,13 @@ void DoRobotDown()
     curRobot->frame++;
 }
 
-void DoRobotKong()
+static void DoRobotKong()
 {
     robotThis[0].frame &= 2;
     robotThis[0].frame |= ((gameTicks >> 3) & 1);
 }
 
-void DoRobotFall()
+static void DoRobotFall()
 {
     if (curRobot->y == curRobot->max)
     {
@@ -515,7 +515,7 @@ void Robots_Kong()
     Audio_Sfx(SFX_KONG);
 }
 
-void DoRobotEugene()
+static void DoRobotEugene()
 {
     if (curRobot->y < curRobot->max)
     {
@@ -530,7 +530,7 @@ void Robots_Eugene()
     robotThis[2].DoMove = DoRobotEugene;
 }
 
-void DoRobotSkylab()
+static void DoRobotSkylab()
 {
     if (curRobot->y < curRobot->max)
     {
@@ -556,7 +556,7 @@ void Robots_Ticker()
     }
 }
 
-void DoRobotDraw()
+static void DoRobotDraw()
 {
     Video_SpriteBlend((curRobot->y << 8) | curRobot->x, robotSprite[curRobot->gfx][curRobot->frame & curRobot->nframes], curRobot->ink);
 }

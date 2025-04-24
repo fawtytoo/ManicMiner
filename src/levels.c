@@ -24,7 +24,7 @@ typedef struct
 }
 TILE;
 
-char        *levelName[20] =
+static char     *levelName[20] =
 {
     "Central Cavern",
     "The Cold Room",
@@ -48,7 +48,7 @@ char        *levelName[20] =
     "The Final Barrier"
 };
 
-int         levelData[20][512] =
+static int      levelData[20][512] =
 {
     { // 1
         2, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 7, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 2,
@@ -412,7 +412,7 @@ int         levelData[20][512] =
     }
 };
 
-BYTE        levelGfx[20][12][8] =
+static BYTE     levelGfx[20][12][8] =
 {
     {
         SPACE,
@@ -608,7 +608,7 @@ BYTE        levelGfx[20][12][8] =
     }
 };
 
-INFO        levelInfo[20][12] =
+static INFO     levelInfo[20][12] =
 {
     {{0x00, T_SPACE}, {0x0c, T_CONVEYL}, {0xea, T_SOLID}, {0x0a, T_FLOOR}, {0x0d, T_FLOOR}, {0x0b, T_COLLAPSE}, {0x04, T_HARM}, {0x05, T_HARM}, {0x00, T_ITEM}},
     {{0x10, T_SPACE}, {0x18, T_CONVEYR}, {0x75, T_SOLID}, {0x15, T_FLOOR}, {0x19, T_COLLAPSE}, {0x15, T_HARM}, {0x10, T_ITEM}},
@@ -632,48 +632,48 @@ INFO        levelInfo[20][12] =
     {{0x00, T_SPACE}, {0x05, T_CONVEYR}, {0x6c, T_SOLID}, {0x0c, T_FLOOR}, {0x0d, T_COLLAPSE}, {0x04, T_HARM}, {0x00, T_ITEM}, {0x00, T_VOID}}
 };
 
-BYTE        *conveyRotate[2];
+static BYTE     *conveyRotate[2];
 
-EVENT       DoWall;
+static EVENT    DoWall;
 
 // this is used for tiles that transition to another tile: collapse, wall, etc
-BYTE        *gfxSpace = (BYTE [8])SPACE;
+static BYTE     *gfxSpace = (BYTE [8])SPACE;
 
-TILE        levelTile[512], *curTile;
-int         curPos;
+static TILE     levelTile[512], *curTile;
+static int      curPos;
 
-BYTE        levelBG;
+static BYTE     levelBG;
 
-void DoCollapse()
+static void DoCollapse()
 {
     curPos = Video_Tile(curPos, curTile->gfx, curTile->paper, curTile->ink, curTile->data);
     Video_Tile(curPos, gfxSpace, levelBG, 0x0, 8 - curTile->data);
 }
 
-void DoTile()
+static void DoTile()
 {
     Video_Tile(curPos, curTile->gfx, curTile->paper, curTile->ink, 8);
 }
 
-void DoItem()
+static void DoItem()
 {
     curTile->ink = (curTile->ink & 3) + 3; // cycle the item colour
     DoTile();
 }
 
-void DoSpace()
+static void DoSpace()
 {
     curTile->data = 0; // needed for SPG beam
     DoTile();
 }
 
-void DoWallTop()
+static void DoWallTop()
 {
     curPos = Video_Tile(curPos, curTile->gfx, curTile->paper, curTile->ink, curTile->data);
     Video_Tile(curPos, gfxSpace, levelBG, 0x0, 8 - curTile->data);
 }
 
-void DoWallBottom()
+static void DoWallBottom()
 {
     curPos = Video_Tile(curPos, gfxSpace, levelBG, 0x0, curTile->data);
     Video_Tile(curPos, curTile->gfx + curTile->data, curTile->paper, curTile->ink, 8 - curTile->data);
@@ -703,7 +703,7 @@ void Level_TileDelete(int tile)
     levelTile[tile].DoDraw = DoSpace;
 }
 
-void DoWallTick()
+static void DoWallTick()
 {
     levelTile[TILE2].data++;
     if (levelTile[TILE1].data-- > 0)

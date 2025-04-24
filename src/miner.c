@@ -30,7 +30,7 @@ typedef struct
 }
 JUMP;
 
-WORD    minerSprite[8][16] =
+WORD            minerSprite[8][16] =
 {
     {96, 124, 62, 44, 124, 60, 24, 60, 126, 126, 239, 223, 60, 110, 118, 238},
     {384, 496, 248, 176, 496, 240, 96, 240, 504, 472, 472, 440, 240, 96, 96, 224},
@@ -42,7 +42,7 @@ WORD    minerSprite[8][16] =
     {1536, 15872, 31744, 13312, 15872, 15360, 6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464}
 };
 
-MINER   minerStart[20] =
+static MINER    minerStart[20] =
 {
     {2, 13, 0, D_RIGHT, 0x8}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7}, {29, 13, 4, D_LEFT, 0x4},
     {1, 3, 0, D_RIGHT, 0x7}, {15, 3, 7, D_LEFT, 0x6}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
@@ -51,7 +51,7 @@ MINER   minerStart[20] =
     {1, 3, 7, D_LEFT, 0x7}, {29, 13, 7, D_LEFT, 0x7}, {14, 10, 0, D_RIGHT, 0x5}, {27, 13, 4, D_LEFT, 0x7}
 };
 
-JUMP    jumpInfo[18] =
+static JUMP     jumpInfo[18] =
 {
     {-4, -32, 6, 5, 72},
     {-4, 0, 4, 5, 74},
@@ -73,15 +73,16 @@ JUMP    jumpInfo[18] =
     {4, 32, 4, 5, 72}
 };
 
-BYTE    minerX, minerY;
-int     minerTile, minerAlign;
-int     minerFrame, minerDir, minerMove;
-int     minerAir, jumpStage;
-BYTE    minerInk;
+static int      minerFrame, minerDir, minerMove;
+static int      minerAir, jumpStage;
+static BYTE     minerInk;
 
-BYTE    minerSeqIndex;
-int     minerSeq[8] = {0, 1, 2, 3, 7, 6, 5, 4};
-TIMER   minerTimer;
+static BYTE     minerSeqIndex;
+static int      minerSeq[8] = {0, 1, 2, 3, 7, 6, 5, 4};
+static TIMER    minerTimer;
+
+BYTE            minerX, minerY;
+int             minerTile, minerAlign;
 
 void Miner_SetSeq(int index, int speed)
 {
@@ -100,7 +101,7 @@ void Miner_DrawSeqSprite(int pos, BYTE paper, BYTE ink)
     Video_Sprite(pos, minerSprite[minerSeq[minerSeqIndex]], paper, ink);
 }
 
-int IsSolid(int tile)
+static int IsSolid(int tile)
 {
     if (Level_GetTileType(tile) == T_SOLID)
     {
@@ -128,7 +129,7 @@ int IsSolid(int tile)
     return 0;
 }
 
-void MoveLeftRight()
+static void MoveLeftRight()
 {
     if (minerMove == 0)
     {
@@ -171,7 +172,7 @@ void MoveLeftRight()
     }
 }
 
-void MinerMove()
+static void MinerMove()
 {
     int i, tile, conveyDir = C_NONE, type[2];
 

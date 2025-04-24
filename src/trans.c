@@ -3,9 +3,9 @@
 #include "game.h"
 #include "audio.h"
 
-int transLevel;
+static int      transLevel;
 
-void DoTransDrawer()
+static void DoTransDrawer()
 {
     if (gameDemo == 0)
     {
@@ -20,7 +20,7 @@ void DoTransDrawer()
     }
 }
 
-void DoTransTicker()
+static void DoTransTicker()
 {
     if (transLevel > 1)
     {
@@ -61,7 +61,7 @@ void DoTransTicker()
     Action = Game_Action;
 }
 
-void DoTransInit()
+static void DoTransInit()
 {
     transLevel = 63;
 
@@ -74,7 +74,7 @@ void DoTransInit()
 }
 
 // this is needed for demo mode
-void DoTransResponder()
+static void DoTransResponder()
 {
     Action = Title_Action;
 }

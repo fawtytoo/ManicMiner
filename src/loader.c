@@ -1,7 +1,7 @@
 #include "misc.h"
 #include "video.h"
 
-BYTE    loaderColour[2][256] =
+static BYTE     loaderColour[2][256] =
 {
     {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -25,14 +25,14 @@ BYTE    loaderColour[2][256] =
     }
 };
 
-int     loaderTicks = 0;
+static int      loaderTicks = 0;
 
-void DoLoaderDrawer()
+static void DoLoaderDrawer()
 {
     Video_CopyColour(loaderColour[videoFlash], 256, 256);
 }
 
-void DoLoaderTicker()
+static void DoLoaderTicker()
 {
     if (loaderTicks++ == 256)
     {
@@ -40,7 +40,7 @@ void DoLoaderTicker()
     }
 }
 
-void DoLoaderInit()
+static void DoLoaderInit()
 {
     Video_CopyColour(loaderColour[0], 256, 256);
     Video_Write(184 * WIDTH, "\x2\x7" "fawtytoo");
@@ -49,7 +49,7 @@ void DoLoaderInit()
     Ticker = DoLoaderTicker;
 }
 
-void DoLoaderResponder()
+static void DoLoaderResponder()
 {
     Action = Title_Action;
 }
