@@ -16,7 +16,10 @@ enum
 
 extern int  audioMusicPlaying;
 
-void Audio_Init(void);
+void Audio_Output(short [2]);
+void Audio_MusicEvent(void);
+void Audio_SfxEvent(void);
+
 void Audio_Music(int, int);
 void Audio_Play(int);
 void Audio_MinerSfx(int, int);

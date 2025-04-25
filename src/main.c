@@ -22,6 +22,9 @@ static int                  gameRunning = 1;
 int                         gameInput;
 
 int                         videoFlash = 0;
+int                         videoSync = 0;
+
+TIMER                       audioTimer;
 
 EVENT                       Action = Loader_Action;
 EVENT                       Responder = DoNothing;
@@ -40,16 +43,6 @@ void DoQuit()
     Ticker = DoNothing;
 }
 
-void System_LockAudio()
-{
-    SDL_LockAudioDevice(sdlAudio);
-}
-
-void System_UnlockAudio()
-{
-    SDL_UnlockAudioDevice(sdlAudio);
-}
-
 static void SdlCallback(void *unused, Uint8 *stream, int length)
 {
     (void)unused;
@@ -58,6 +51,13 @@ static void SdlCallback(void *unused, Uint8 *stream, int length)
 
     while (length)
     {
+        if (Timer_Update(&audioTimer))
+        {
+            Audio_MusicEvent();
+            Audio_SfxEvent();
+            videoSync = 1;
+        }
+
         Audio_Output(output);
         output += 2;
         length -= 4;
@@ -209,10 +209,9 @@ int main()
 
     keyState = SDL_GetKeyboardState(NULL);
 
-    Audio_Init();
-
     Timer_Set(&timerFrame, TICKRATE, mode.refresh_rate);
     Timer_Set(&timerFlash, 25, TICKRATE * 8); // 25 = 3.125 * 8
+    Timer_Set(&audioTimer, TICKRATE, SAMPLERATE);
 
     while (gameRunning)
     {
@@ -237,6 +236,12 @@ int main()
             Drawer();
 
             videoFlash ^= Timer_Update(&timerFlash);
+
+            while (!videoSync)
+            {
+                SDL_Delay(1);
+            }
+            videoSync = 0;
         }
 
         SDL_UnlockTexture(sdlTexture);
