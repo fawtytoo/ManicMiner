@@ -291,6 +291,7 @@ static void DoGameInit()
     System_Border(levelBorder[gameLevel]);
 
     Timer_Set(&gameTimer, 12, TICKRATE);
+    gameFrame = 1; // immediate drawing
 
     if (gamePaused == 0)
     {
