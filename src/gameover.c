@@ -5,6 +5,7 @@
 
 static WORD     plinthSprite[16] = {65535, 29262, 35409, 43605, 19026, 4680, 8772, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836, 10836};
 static WORD     bootSprite[16] = {10944, 13632, 16320, 2304, 2304, 8064, 4224, 4224, 4480, 8768, 8376, 22820, 17474, 17410, 17410, 65535};
+static WORD     minerSprite[16] = {96, 992, 1984, 832, 992, 960, 384, 960, 2016, 2016, 3952, 4016, 960, 1888, 1760, 1904};
 
 static int      bootTicks;
 
@@ -60,7 +61,7 @@ static void DoGameoverInit()
 
     Video_PixelFill(0, 128 * WIDTH, 0x0);
     Video_Sprite(112 * WIDTH + 15 * 8, plinthSprite, 0x0, 0x7);
-    Video_Sprite(96 * WIDTH + 15 * 8, minerSprite[5], 0x0, 0x7);
+    Video_Sprite(96 * WIDTH + 15 * 8, minerSprite, 0x0, 0x7);
 
     bootTicks = 0;
 

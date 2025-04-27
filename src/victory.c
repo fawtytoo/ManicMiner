@@ -3,6 +3,8 @@
 #include "game.h"
 #include "audio.h"
 
+static WORD     minerSprite[16] = {24, 248, 496, 208, 248, 240, 96, 240, 504, 1020, 2046, 1782, 248, 474, 782, 900};
+
 static int      victoryTimer;
 
 static void DoVictoryTicker()
@@ -22,7 +24,7 @@ static void DoVictoryInit()
     Robots_Drawer();
     Portal_Drawer();
 
-    Video_SpriteBlend(24 * WIDTH + 19 * 8, minerSprite[4], 0x7);
+    Video_SpriteBlend(24 * WIDTH + 19 * 8, minerSprite, 0x7);
 
     victoryTimer = 50 * 9;
 

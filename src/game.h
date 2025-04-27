@@ -72,7 +72,6 @@ int Level_GetSpgTile(int);
 // miner
 extern BYTE minerX, minerY;
 extern int  minerTile, minerAlign;
-extern WORD minerSprite[8][16];
 
 void Miner_Init(void);
 void DoMinerTicker(void);
