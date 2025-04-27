@@ -21,7 +21,6 @@ static int                  gameRunning = 1;
 
 int                         gameInput;
 
-int                         videoFlash = 0;
 int                         videoSync = 0;
 
 TIMER                       audioTimer;
@@ -30,7 +29,6 @@ EVENT                       Action = Loader_Action;
 EVENT                       Responder = DoNothing;
 EVENT                       Ticker = DoNothing;
 EVENT                       Drawer = DoNothing;
-EVENT                       Flasher = DoNothing;
 
 void DoNothing()
 {
@@ -176,7 +174,7 @@ int main()
     SDL_AudioSpec   want;
     SDL_DisplayMode mode;
     int             multiply;
-    TIMER           timerFlash, timerFrame;
+    TIMER           timerFrame;
     int             frame = 0;
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
@@ -210,7 +208,6 @@ int main()
     keyState = SDL_GetKeyboardState(NULL);
 
     Timer_Set(&timerFrame, TICKRATE, mode.refresh_rate);
-    Timer_Set(&timerFlash, 25, TICKRATE * 8); // 25 = 3.125 * 8
     Timer_Set(&audioTimer, TICKRATE, SAMPLERATE);
 
     while (gameRunning)
@@ -234,8 +231,6 @@ int main()
 
             Ticker();
             Drawer();
-
-            videoFlash ^= Timer_Update(&timerFlash);
 
             while (!videoSync)
             {

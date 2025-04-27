@@ -26,14 +26,18 @@ static BYTE     loaderColour[2][256] =
 };
 
 static int      loaderTicks = 0;
+static int      loaderFlash = 0;
+static TIMER    loaderTimer;
 
 static void DoLoaderDrawer()
 {
-    Video_CopyColour(loaderColour[videoFlash], 256, 256);
+    Video_CopyColour(loaderColour[loaderFlash], 256, 256);
 }
 
 static void DoLoaderTicker()
 {
+    loaderFlash ^= Timer_Update(&loaderTimer);
+
     if (loaderTicks++ == 256)
     {
         Action = Title_Action;
@@ -45,6 +49,8 @@ static void DoLoaderInit()
     Video_CopyColour(loaderColour[0], 256, 256);
     Video_Write(184 * WIDTH, "\x2\x7" "fawtytoo");
     Video_Write(184 * WIDTH + WIDTH - Video_TextWidth(BUILD), "\x2\x1" BUILD);
+
+    Timer_Set(&loaderTimer, 3, TICKRATE);
 
     Ticker = DoLoaderTicker;
 }

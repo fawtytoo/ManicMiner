@@ -47,7 +47,7 @@ static int     portalFlash;
 
 void DoPortalTicker()
 {
-    portalFlash = videoFlash;
+    portalFlash ^= 1;
 
     if (portalTile != minerTile)
     {

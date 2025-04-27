@@ -56,8 +56,6 @@ typedef void (*EVENT)(void);
 extern EVENT    Action, Responder, Ticker, Drawer;
 extern int      gameInput;
 
-extern int      videoFlash;
-
 void DoNothing(void);
 void DoQuit(void);
 
