@@ -13,8 +13,6 @@ static SDL_AudioDeviceID    sdlAudio;
 
 static const Uint8          *keyState;
 
-static u32                  *sdlPixels;
-
 static SDL_Color            sdlColor;
 
 static int                  gameRunning = 1;
@@ -159,7 +157,12 @@ static int System_GetEvent()
 
 void System_SetPixel(int point, int index)
 {
-    *(sdlPixels + point) = videoPalette[index];
+    Uint8   *pixel = (Uint8 *)sdlSurface->pixels;
+
+    pixel += (point / WIDTH) * sdlSurface->pitch;
+    pixel += (point & 255) * sdlSurface->format->BytesPerPixel;
+
+    *(Uint32 *)pixel = videoPalette[index];
 }
 
 void System_Border(int index)
@@ -213,7 +216,6 @@ int main()
     while (gameRunning)
     {
         SDL_LockTextureToSurface(sdlTexture, NULL, &sdlSurface);
-        sdlPixels = (u32 *)sdlSurface->pixels;
 
         frame = Timer_Update(&timerFrame);
 
