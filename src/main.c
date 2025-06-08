@@ -11,9 +11,9 @@ static SDL_Surface          *sdlSurface;
 static SDL_Rect             sdlViewport;
 static SDL_AudioDeviceID    sdlAudio;
 
-static const BYTE           *keyState;
+static const Uint8          *keyState;
 
-static UINT                 *sdlPixels;
+static u32                  *sdlPixels;
 
 static SDL_Color            sdlColor;
 
@@ -213,7 +213,7 @@ int main()
     while (gameRunning)
     {
         SDL_LockTextureToSurface(sdlTexture, NULL, &sdlSurface);
-        sdlPixels = (UINT *)sdlSurface->pixels;
+        sdlPixels = (u32 *)sdlSurface->pixels;
 
         frame = Timer_Update(&timerFrame);
 

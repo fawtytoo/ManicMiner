@@ -70,7 +70,7 @@ void Level_SetSpgTiles(int, int, int);
 int Level_GetSpgTile(int);
 
 // miner
-extern BYTE minerX, minerY;
+extern u8   minerX, minerY;
 extern int  minerTile, minerAlign;
 
 void Miner_Init(void);
@@ -78,7 +78,7 @@ void DoMinerTicker(void);
 void DoMinerDrawer(void);
 void Miner_SetSeq(int, int);
 void Miner_IncSeq(void);
-void Miner_DrawSeqSprite(int, BYTE, BYTE);
+void Miner_DrawSeqSprite(int, u8, u8);
 
 // portal
 void Portal_Init(void);

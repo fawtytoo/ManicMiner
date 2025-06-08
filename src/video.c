@@ -4,7 +4,7 @@
 
 static int      videoPixel[WIDTH * HEIGHT];
 
-static BYTE     charSet[128][10] =
+static u8       charSet[128][10] =
 {
     {0}, // null
     {0}, // paper
@@ -112,7 +112,7 @@ static BYTE     charSet[128][10] =
     {9, 60, 66, 153, 165, 165, 129, 66, 60, 0}
 };
 
-static WORD     charSetLarge[128][8] =
+static u16      charSetLarge[128][8] =
 {
     {0, 0, 0, 0, 0, 0, 0, 0}, // null
     {0, 0, 0, 0, 0, 0, 0, 0}, // paper
@@ -244,7 +244,7 @@ static WORD     charSetLarge[128][8] =
     {4080, 6168, 13260, 9252, 9252, 12876, 6168, 4080}
 };
 
-static BYTE     textInk[2] = {0x0, 0x0};
+static u8       textInk[2] = {0x0, 0x0};
 
 int Video_TextWidth(char *text)
 {
@@ -258,7 +258,7 @@ int Video_TextWidth(char *text)
     return l;
 }
 
-void Video_PianoKey(int tile, BYTE ink)
+void Video_PianoKey(int tile, u8 ink)
 {
     int pos = TILE2PIXEL(tile) - 4;
     int pixel;
@@ -277,7 +277,7 @@ void Video_PianoKey(int tile, BYTE ink)
     }
 }
 
-void Video_AirBar(int pixel, BYTE ink)
+void Video_AirBar(int pixel, u8 ink)
 {
     System_SetPixel(pixel, ink);
     System_SetPixel(pixel += WIDTH, ink);
@@ -285,7 +285,7 @@ void Video_AirBar(int pixel, BYTE ink)
     System_SetPixel(pixel += WIDTH, ink);
 }
 
-void Video_TilePaper(int tile, BYTE paper)
+void Video_TilePaper(int tile, u8 paper)
 {
     int point, pos;
     int pixel = TILE2PIXEL(tile);
@@ -300,7 +300,7 @@ void Video_TilePaper(int tile, BYTE paper)
     }
 }
 
-void Video_LevelPaperFill(BYTE paper)
+void Video_LevelPaperFill(u8 paper)
 {
     int dest;
 
@@ -310,7 +310,7 @@ void Video_LevelPaperFill(BYTE paper)
     }
 }
 
-void Video_TileInk(int tile, BYTE ink)
+void Video_TileInk(int tile, u8 ink)
 {
     int point, pos;
     int pixel = TILE2PIXEL(tile);
@@ -325,7 +325,7 @@ void Video_TileInk(int tile, BYTE ink)
     }
 }
 
-void Video_LevelInkFill(BYTE ink)
+void Video_LevelInkFill(u8 ink)
 {
     int dest;
 
@@ -335,7 +335,7 @@ void Video_LevelInkFill(BYTE ink)
     }
 }
 
-void Video_PixelFill(int pixel, int size, BYTE ink)
+void Video_PixelFill(int pixel, int size, u8 ink)
 {
     for ( ; size > 0; size--, pixel++)
     {
@@ -344,12 +344,12 @@ void Video_PixelFill(int pixel, int size, BYTE ink)
     }
 }
 
-int Video_Tile(int pos, BYTE *gfx, BYTE paper, BYTE ink, int rows)
+int Video_Tile(int pos, u8 *gfx, u8 paper, u8 ink, int rows)
 {
     int     row, bit;
     int     pixel;
-    BYTE    byte;
-    BYTE    colour[2] = {paper, ink};
+    u8      byte;
+    u8      colour[2] = {paper, ink};
 
     for (row = 0; row < rows; row++, pos += WIDTH, gfx++)
     {
@@ -365,11 +365,11 @@ int Video_Tile(int pos, BYTE *gfx, BYTE paper, BYTE ink, int rows)
     return pos;
 }
 
-void Video_Miner(int pos, WORD *line, BYTE ink)
+void Video_Miner(int pos, u16 *line, u8 ink)
 {
     int     row, bit;
     int     pixel;
-    WORD    word;
+    u16     word;
 
     for (row = 0; row < 16; row++, pos += WIDTH, line++)
     {
@@ -391,11 +391,11 @@ void Video_Miner(int pos, WORD *line, BYTE ink)
     }
 }
 
-void Video_SpriteBlend(int pos, WORD *line, BYTE ink)
+void Video_SpriteBlend(int pos, u16 *line, u8 ink)
 {
     int     row, bit;
     int     pixel;
-    WORD    word;
+    u16     word;
 
     pos += 15;
 
@@ -414,12 +414,12 @@ void Video_SpriteBlend(int pos, WORD *line, BYTE ink)
     }
 }
 
-void Video_Sprite(int pos, WORD *line, BYTE paper, BYTE ink)
+void Video_Sprite(int pos, u16 *line, u8 paper, u8 ink)
 {
     int     row, bit;
     int     pixel;
-    WORD    word;
-    BYTE    colour[2] = {paper, ink};
+    u16     word;
+    u8      colour[2] = {paper, ink};
 
     pos += 15;
 
@@ -439,9 +439,9 @@ void Video_DrawPiano()
 {
     char    *text = "\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17";
     int     col, bit, pos = 128 * WIDTH;
-    WORD    *byte, line;
+    u16     *byte, line;
     int     pixel;
-    BYTE    ink[2] = {0x0, 0x7};
+    u8      ink[2] = {0x0, 0x7};
 
     for ( ; *text; text++)
     {
@@ -480,7 +480,7 @@ static int TextCode(char *text)
 void Video_WriteLarge(int pos, int x, char *text)
 {
     int     col, bit;
-    WORD    *byte, line;
+    u16     *byte, line;
     int     pixel;
 
     for ( ; *text; text++)
@@ -511,7 +511,7 @@ void Video_WriteLarge(int pos, int x, char *text)
 void Video_Write(int pos, char *text)
 {
     int     col, bit;
-    BYTE    *byte, line;
+    u8      *byte, line;
     int     pixel;
     int     width;
 
@@ -538,11 +538,11 @@ void Video_Write(int pos, char *text)
     }
 }
 
-void Video_CopyBytes(BYTE *src)
+void Video_CopyBytes(u8 *src)
 {
     int     *pixel = &videoPixel[0];
     int     size, bit;
-    BYTE    byte;
+    u8      byte;
 
     for (size = 0; size < 2048; size++, src++)
     {
@@ -554,7 +554,7 @@ void Video_CopyBytes(BYTE *src)
     }
 }
 
-void Video_CopyColour(BYTE *src, int dest, int size)
+void Video_CopyColour(u8 *src, int dest, int size)
 {
     for ( ; size > 0; size--, dest++, src++)
     {

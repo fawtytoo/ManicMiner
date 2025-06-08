@@ -37,9 +37,9 @@ typedef struct _DRAW    DRAW;
 struct _DRAW
 {
     DRAW    *next;
-    void (*Drawer)(int, BYTE);
+    void    (*Drawer)(int, u8);
     int     pos;
-    BYTE    attr;
+    u8      attr;
 };
 
 static DRAW     drawList[6] =
@@ -60,7 +60,7 @@ KEY;
 typedef struct
 {
     int     left[3], right[3];    // pseudo stereo/panning effects
-    UINT    phase, frequency;
+    u32     phase, frequency;
     EVENT   DoPhase;
 }
 CHANNEL;
@@ -112,7 +112,7 @@ static int      panTable[2][225] =
     }
 };
 
-static UINT     frequencyTable[128] =
+static u32      frequencyTable[128] =
 {
     0x00184cbb, 0x0019bea3, 0x001b4688, 0x001ce5bd, 0x001e9da1, 0x00206fae, 0x00225d71, 0x00246891,
     0x002692cb, 0x0028ddfb, 0x002b4c15, 0x002ddf2d, 0x00309976, 0x00337d46, 0x00368d11, 0x0039cb7a,
@@ -132,7 +132,7 @@ static UINT     frequencyTable[128] =
     0x6132edbe, 0x66fa8c2a, 0x6d1a23d8, 0x7396f4b1, 0x7a768772, 0x81beb8a3, 0x8975c674, 0x91a245b2
 };
 
-static BYTE     musicScore[2][2128] =
+static u8       musicScore[2][2128] =
 {
     {
         BC_BLACK,   48, 57, 12, 32, 57, 2,
@@ -415,7 +415,7 @@ static SFX      sfxInfo[NSFX] =
 
 static int      musicIndex = 0;
 static int      musicClock = 0, musicDelta;
-static BYTE     *curMusic;
+static u8       *curMusic;
 
 static int      musicChannels = 0;
 
@@ -428,7 +428,7 @@ int             audioMusicPlaying = MUS_STOP;
 
 static void DoPhase()
 {
-    UINT    phase = curChannel->phase >> 31;
+    u32     phase = curChannel->phase >> 31;
 
     curChannel->left[2] = curChannel->left[phase];
     curChannel->right[2] = curChannel->right[phase];
@@ -597,7 +597,7 @@ static void DrawListAdd(int state)
 
     drawEnd->Drawer = key->type == 0 ? Video_PianoKey : Video_TilePaper;
     drawEnd->pos = KEYBOARD * 32 + key->pos;
-    drawEnd->attr = (BYTE [4]){0x7, 0x0, 0x5, 0x2}[state | key->type];
+    drawEnd->attr = (u8 [4]){0x7, 0x0, 0x5, 0x2}[state | key->type];
     drawEnd = drawEnd->next;
 }
 

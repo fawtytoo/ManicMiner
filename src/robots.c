@@ -7,19 +7,19 @@
 
 typedef struct
 {
-    BYTE    x, y;
+    u8      x, y;
     int     min, max;
     EVENT   DoMove, DoDraw;
     int     speed;
     int     gfx;
-    BYTE    ink;
+    u8      ink;
     int     nframes; // 3 or 7 = 4 frames or 8 frames
     int     frame;
     int     tile;
 }
 ROBOT;
 
-static WORD     robotSprite[29][8][16] =
+static u16      robotSprite[29][8][16] =
 {
     {
         {7968, 14816, 6624, 3872, 40704, 24448, 65472, 24064, 40896, 8064, 3584, 7936, 48032, 29120, 8320, 4352},

@@ -15,7 +15,7 @@ typedef struct
     int     x, y;
     int     frame;
     int     dir;
-    BYTE    ink;
+    u8      ink;
 }
 MINER;
 
@@ -30,7 +30,7 @@ typedef struct
 }
 JUMP;
 
-static WORD     minerSprite[8][16] =
+static u16      minerSprite[8][16] =
 {
     {96, 124, 62, 44, 124, 60, 24, 60, 126, 126, 239, 223, 60, 110, 118, 238},
     {384, 496, 248, 176, 496, 240, 96, 240, 504, 472, 472, 440, 240, 96, 96, 224},
@@ -75,13 +75,13 @@ static JUMP     jumpInfo[18] =
 
 static int      minerFrame, minerDir, minerMove;
 static int      minerAir, jumpStage;
-static BYTE     minerInk;
+static u8       minerInk;
 
-static BYTE     minerSeqIndex;
+static u8       minerSeqIndex;
 static int      minerSeq[8] = {0, 1, 2, 3, 7, 6, 5, 4};
 static TIMER    minerTimer;
 
-BYTE            minerX, minerY;
+u8              minerX, minerY;
 int             minerTile, minerAlign;
 
 void Miner_SetSeq(int index, int speed)
@@ -96,7 +96,7 @@ void Miner_IncSeq()
     minerSeqIndex &= 7;
 }
 
-void Miner_DrawSeqSprite(int pos, BYTE paper, BYTE ink)
+void Miner_DrawSeqSprite(int pos, u8 paper, u8 ink)
 {
     Video_Sprite(pos, minerSprite[minerSeq[minerSeqIndex]], paper, ink);
 }

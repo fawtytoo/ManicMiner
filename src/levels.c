@@ -9,7 +9,7 @@
 
 typedef struct
 {
-    BYTE    colour;
+    u8      colour;
     int     type;
 }
 INFO;
@@ -17,8 +17,8 @@ INFO;
 typedef struct
 {
     int     type;
-    BYTE    *gfx;
-    BYTE    paper, ink;
+    u8      *gfx;
+    u8      paper, ink;
     int     data;
     EVENT   DoDraw;
 }
@@ -412,7 +412,7 @@ static int      levelData[20][512] =
     }
 };
 
-static BYTE     levelGfx[20][12][8] =
+static u8       levelGfx[20][12][8] =
 {
     {
         SPACE,
@@ -632,17 +632,17 @@ static INFO     levelInfo[20][12] =
     {{0x00, T_SPACE}, {0x05, T_CONVEYR}, {0x6c, T_SOLID}, {0x0c, T_FLOOR}, {0x0d, T_COLLAPSE}, {0x04, T_HARM}, {0x00, T_ITEM}, {0x00, T_VOID}}
 };
 
-static BYTE     *conveyRotate[2];
+static u8       *conveyRotate[2];
 
 static EVENT    DoWall;
 
 // this is used for tiles that transition to another tile: collapse, wall, etc
-static BYTE     *gfxSpace = (BYTE [8])SPACE;
+static u8       *gfxSpace = (u8 [8])SPACE;
 
 static TILE     levelTile[512], *curTile;
 static int      curPos;
 
-static BYTE     levelBG;
+static u8       levelBG;
 
 static void DoCollapse()
 {

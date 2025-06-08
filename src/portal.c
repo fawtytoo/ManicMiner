@@ -5,10 +5,10 @@
 typedef struct
 {
     int     x, y;
-    BYTE    paper, ink;
+    u8      paper, ink;
 } PORTAL;
 
-static WORD     portalGfx[20][16] =
+static u16      portalGfx[20][16] =
 {
     {65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535, 37449, 46811, 65535},
     {65535, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 37449, 65535},
@@ -41,8 +41,8 @@ static PORTAL  portalInfo[20] =
 };
 
 static int     portalTile, portalPos;
-static BYTE    portalPaper[2], portalInk[2];
-static WORD    *portalSprite;
+static u8       portalPaper[2], portalInk[2];
+static u16      *portalSprite;
 static int     portalFlash;
 
 void DoPortalTicker()

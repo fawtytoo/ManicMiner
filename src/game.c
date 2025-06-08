@@ -80,7 +80,7 @@ void Game_ReduceAir(int amount)
     }
 }
 
-static void GameDrawScore(int pos, int x, int score, BYTE ink)
+static void GameDrawScore(int pos, int x, int score, u8 ink)
 {
     int     digit = 6, i = 9;
     char    text[11] = "\x1\x0\x2\x0" ".....0";
