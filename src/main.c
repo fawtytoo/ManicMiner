@@ -13,7 +13,7 @@ static SDL_AudioDeviceID    sdlAudio;
 
 static const Uint8          *keyState;
 
-static SDL_Color            sdlColor;
+const COLOUR                *sysBorder = &videoColour[0];
 
 static int                  gameRunning = 1;
 
@@ -162,14 +162,14 @@ void System_SetPixel(int point, int index)
     pixel += (point / WIDTH) * sdlSurface->pitch;
     pixel += (point & 255) * sdlSurface->format->BytesPerPixel;
 
-    *(Uint32 *)pixel = videoPalette[index];
+    *pixel++ = videoColour[index].b;
+    *pixel++ = videoColour[index].g;
+    *pixel++ = videoColour[index].r;
 }
 
 void System_Border(int index)
 {
-    sdlColor.r = videoPalette[index] >> 16;
-    sdlColor.g = (videoPalette[index] >> 8) & 0xff;
-    sdlColor.b = videoPalette[index] & 0xff;
+    sysBorder = &videoColour[index];
 }
 
 int main()
@@ -243,7 +243,7 @@ int main()
 
         SDL_UnlockTexture(sdlTexture);
 
-        SDL_SetRenderDrawColor(sdlRenderer, sdlColor.r, sdlColor.g, sdlColor.b, 0xff);
+        SDL_SetRenderDrawColor(sdlRenderer, sysBorder->r, sysBorder->g, sysBorder->b, 0xff);
         SDL_RenderClear(sdlRenderer);
         SDL_SetRenderTarget(sdlRenderer, sdlTarget);
         SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
