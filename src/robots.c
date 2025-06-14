@@ -222,13 +222,13 @@ static u16      robotSprite[29][8][16] =
     }
 };
 
-static void DoRobotLeft();
-static void DoRobotRight();
-static void DoRobotUp();
-static void DoRobotDown();
-static void DoRobotKong();
-static void DoRobotSkylab();
-static void DoRobotDraw();
+static void DoRobotLeft(void);
+static void DoRobotRight(void);
+static void DoRobotUp(void);
+static void DoRobotDown(void);
+static void DoRobotKong(void);
+static void DoRobotSkylab(void);
+static void DoRobotDraw(void);
 
 static ROBOT    robotStart[20][8] =
 {
