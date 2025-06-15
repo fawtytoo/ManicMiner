@@ -86,7 +86,6 @@ void Portal_Drawer(void);
 void DoPortalTicker(void);
 
 // robots
-extern int  robotCount[8];
 void Robots_Init(void);
 void Robots_Drawer(void);
 void Robots_Ticker(void);
