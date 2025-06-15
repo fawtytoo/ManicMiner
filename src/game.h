@@ -66,7 +66,7 @@ int Level_GetTileType(int);
 void Level_CollapseTile(int);
 void Level_TileDelete(int);
 void Level_Switch(int);
-void Level_SetSpgTiles(int, int, int);
+void Level_SetSpgTile(int, int);
 int Level_GetSpgTile(int);
 
 // miner
@@ -93,7 +93,6 @@ void Robots_Ticker(void);
 void Robots_Eugene(void);
 void Robots_Barrel(void);
 void Robots_Kong(void);
-void Robots_SetSpgTiles(void);
 
 // spg
 void DoSpgTicker(void);

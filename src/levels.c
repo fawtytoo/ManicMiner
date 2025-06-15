@@ -890,14 +890,9 @@ int Level_GetSpgTile(int tile)
     return levelTile[tile].data;
 }
 
-void Level_SetSpgTiles(int tile, int count, int this)
+void Level_SetSpgTile(int tile, int data)
 {
-    int adj = 1;
-
-    for ( ; count > 0; count--, tile += adj, adj ^= 30)
-    {
-        levelTile[tile].data |= this;
-    }
+    levelTile[tile].data |= data;
 }
 
 void Level_TileDelete(int tile)

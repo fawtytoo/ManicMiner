@@ -23,9 +23,6 @@ void DoSpgTicker()
     int way[2] = {32, -1};
     int this;
 
-    Robots_SetSpgTiles();
-    Level_SetSpgTiles(minerTile, minerAlign, B_MINER);
-
     spgCount = 0;
     spgTrace[spgCount++] = tile;
 

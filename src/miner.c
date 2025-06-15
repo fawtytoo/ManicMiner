@@ -348,6 +348,8 @@ void DoMinerTicker()
     tile = minerTile;
     for (cell = 0; cell < minerAlign; cell++, tile += adj, adj ^= 30)
     {
+        Level_SetSpgTile(tile, B_MINER);
+
         type = Level_GetTileType(tile);
         if (type == T_ITEM)
         {

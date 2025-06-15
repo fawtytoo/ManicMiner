@@ -3,13 +3,14 @@
 #include "video.h"
 #include "audio.h"
 
-#define NOROBOT {0, 0, 0, 0, DoNothing, DoNothing, 0, 0, 0, 0, 0, 0}
+#define NOROBOT {0, 0, 0, 0, DoNothing, DoNothing, DoNothing, 0, 0, 0, 0, 0, 0}
 
 typedef struct
 {
     u8      x, y;
     int     min, max;
     EVENT   DoMove, DoDraw;
+    EVENT   DoSpg;
     int     speed;
     int     gfx;
     u8      ink;
@@ -229,148 +230,149 @@ static void DoRobotDown(void);
 static void DoRobotKong(void);
 static void DoRobotSkylab(void);
 static void DoRobotDraw(void);
+static void DoRobotSpg(void);
 
 static ROBOT    robotStart[20][8] =
 {
     {
-        {8, 7, 64, 120, DoRobotRight, DoRobotDraw, 0, 0, 0x6, 7, 0, 0},
+        {8, 7, 64, 120, DoRobotRight, DoRobotDraw, DoNothing, 0, 0, 0x6, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {18, 3, 8, 144, DoRobotLeft, DoRobotDraw, 0, 1, 0x7, 7, 7, 0},
-        {29, 13, 96, 232, DoRobotLeft, DoRobotDraw, 0, 1, 0x7, 7, 7, 0},
+        {18, 3, 8, 144, DoRobotLeft, DoRobotDraw, DoNothing, 0, 1, 0x7, 7, 7, 0},
+        {29, 13, 96, 232, DoRobotLeft, DoRobotDraw, DoNothing, 0, 1, 0x7, 7, 7, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {19, 13, 8, 152, DoRobotLeft, DoRobotDraw, 0, 2, 0x3, 7, 7, 0},
-        {16, 3, 8, 128, DoRobotLeft, DoRobotDraw, 0, 2, 0x5, 7, 7, 0},
-        {18, 3, 144, 232, DoRobotRight, DoRobotDraw, 0, 2, 0xe, 7, 0, 0},
+        {19, 13, 8, 152, DoRobotLeft, DoRobotDraw, DoNothing, 0, 2, 0x3, 7, 7, 0},
+        {16, 3, 8, 128, DoRobotLeft, DoRobotDraw, DoNothing, 0, 2, 0x5, 7, 7, 0},
+        {18, 3, 144, 232, DoRobotRight, DoRobotDraw, DoNothing, 0, 2, 0xe, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {1, 13, 8, 80, DoRobotRight, DoRobotDraw, 0, 3, 0x5, 7, 0, 0},
-        {7, 13, 48, 120, DoRobotRight, DoRobotDraw, 0, 3, 0x8, 7, 0, 0},
+        {1, 13, 8, 80, DoRobotRight, DoRobotDraw, DoNothing, 0, 3, 0x5, 7, 0, 0},
+        {7, 13, 48, 120, DoRobotRight, DoRobotDraw, DoNothing, 0, 3, 0x8, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {12, 3, 8, 96, DoRobotLeft, DoRobotDraw, 0, 5, 0x6, 7, 7, 0},
-        {4, 7, 32, 96, DoRobotRight, DoRobotDraw, 0, 5, 0x0, 7, 0, 0},
-        {15, 0, 0, 88, DoRobotDown, DoRobotDraw, 1, 4, 0x7, 0, 0, 0},
+        {12, 3, 8, 96, DoRobotLeft, DoRobotDraw, DoNothing, 0, 5, 0x6, 7, 7, 0},
+        {4, 7, 32, 96, DoRobotRight, DoRobotDraw, DoNothing, 0, 5, 0x0, 7, 0, 0},
+        {15, 0, 0, 88, DoRobotDown, DoRobotDraw, DoNothing, 1, 4, 0x7, 0, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {6, 8, 48, 104, DoRobotRight, DoRobotDraw, 0, 6, 0xe, 7, 0, 0},
-        {14, 8, 112, 168, DoRobotRight, DoRobotDraw, 0, 6, 0x3, 7, 1, 0},
-        {8, 13, 64, 160, DoRobotRight, DoRobotDraw, 0, 6, 0x5, 7, 2, 0},
-        {24, 13, 192, 232, DoRobotRight, DoRobotDraw, 0, 6, 0x2, 7, 3, 0},
+        {6, 8, 48, 104, DoRobotRight, DoRobotDraw, DoNothing, 0, 6, 0xe, 7, 0, 0},
+        {14, 8, 112, 168, DoRobotRight, DoRobotDraw, DoNothing, 0, 6, 0x3, 7, 1, 0},
+        {8, 13, 64, 160, DoRobotRight, DoRobotDraw, DoNothing, 0, 6, 0x5, 7, 2, 0},
+        {24, 13, 192, 232, DoRobotRight, DoRobotDraw, DoNothing, 0, 6, 0x2, 7, 3, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {15, 1, 120, 232, DoRobotRight, DoRobotDraw, 0, 7, 0x7, 7, 0, 0},
-        {10, 8, 16, 80, DoRobotLeft, DoRobotDraw, 0, 7, 0x2, 7, 7, 0},
-        {17, 13, 136, 232, DoRobotRight, DoRobotDraw, 0, 7, 0xe, 7, 0, 0},
+        {15, 1, 120, 232, DoRobotRight, DoRobotDraw, DoNothing, 0, 7, 0x7, 7, 0, 0},
+        {10, 8, 16, 80, DoRobotLeft, DoRobotDraw, DoNothing, 0, 7, 0x2, 7, 7, 0},
+        {17, 13, 136, 232, DoRobotRight, DoRobotDraw, DoNothing, 0, 7, 0xe, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {15, 0, 0, 100, DoRobotKong, DoRobotDraw, 4, 8, 0xe, 1, 0, 0},
-        {9, 13, 8, 72, DoRobotLeft, DoRobotDraw, 0, 9, 0x2, 3, 7, 0},
-        {11, 11, 88, 120, DoRobotRight, DoRobotDraw, 1, 9, 0xe, 3, 0, 0},
-        {18, 7, 144, 168, DoRobotRight, DoRobotDraw, 0, 9, 0x6, 3, 0, 0},
+        {15, 0, 0, 100, DoRobotKong, DoRobotDraw, DoNothing, 4, 8, 0xe, 1, 0, 0},
+        {9, 13, 8, 72, DoRobotLeft, DoRobotDraw, DoNothing, 0, 9, 0x2, 3, 7, 0},
+        {11, 11, 88, 120, DoRobotRight, DoRobotDraw, DoNothing, 1, 9, 0xe, 3, 0, 0},
+        {18, 7, 144, 168, DoRobotRight, DoRobotDraw, DoNothing, 0, 9, 0x6, 3, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {12, 3, 96, 144, DoRobotRight, DoRobotDraw, 0, 11, 0xa, 3, 0, 0},
-        {16, 10, 96, 144, DoRobotRight, DoRobotDraw, 1, 11, 0x6, 3, 0, 0},
-        {5, 1, 5, 100, DoRobotDown, DoRobotDraw, 1, 10, 0x3, 3, 0, 0},
-        {10, 1, 5, 100, DoRobotDown, DoRobotDraw, 2, 10, 0x4, 3, 1, 0},
-        {20, 1, 5, 100, DoRobotDown, DoRobotDraw, 1, 10, 0x1, 3, 2, 0},
-        {25, 1, 5, 100, DoRobotDown, DoRobotDraw, 2, 10, 0x2, 3, 3, 0},
+        {12, 3, 96, 144, DoRobotRight, DoRobotDraw, DoNothing, 0, 11, 0xa, 3, 0, 0},
+        {16, 10, 96, 144, DoRobotRight, DoRobotDraw, DoNothing, 1, 11, 0x6, 3, 0, 0},
+        {5, 1, 5, 100, DoRobotDown, DoRobotDraw, DoNothing, 1, 10, 0x3, 3, 0, 0},
+        {10, 1, 5, 100, DoRobotDown, DoRobotDraw, DoNothing, 2, 10, 0x4, 3, 1, 0},
+        {20, 1, 5, 100, DoRobotDown, DoRobotDraw, DoNothing, 1, 10, 0x1, 3, 2, 0},
+        {25, 1, 5, 100, DoRobotDown, DoRobotDraw, DoNothing, 2, 10, 0x2, 3, 3, 0},
         NOROBOT, NOROBOT
     },
     {
-        {9, 7, 72, 112, DoRobotRight, DoRobotDraw, 0, 12, 0xb, 7, 0, 0},
-        {12, 10, 64, 112, DoRobotRight, DoRobotDraw, 1, 12, 0xe, 7, 0, 0},
-        {8, 13, 32, 208, DoRobotRight, DoRobotDraw, 0, 12, 0x6, 7, 0, 0},
-        {18, 5, 136, 168, DoRobotRight, DoRobotDraw, 0, 12, 0xf, 7, 0, 0},
+        {9, 7, 72, 112, DoRobotRight, DoRobotDraw, DoNothing, 0, 12, 0xb, 7, 0, 0},
+        {12, 10, 64, 112, DoRobotRight, DoRobotDraw, DoNothing, 1, 12, 0xe, 7, 0, 0},
+        {8, 13, 32, 208, DoRobotRight, DoRobotDraw, DoNothing, 0, 12, 0x6, 7, 0, 0},
+        {18, 5, 136, 168, DoRobotRight, DoRobotDraw, DoNothing, 0, 12, 0xf, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {15, 3, 120, 192, DoRobotRight, DoRobotDraw, 0, 14, 0xe, 3, 0, 0},
-        {14, 7, 112, 144, DoRobotRight, DoRobotDraw, 1, 14, 0xc, 3, 0, 0},
-        {15, 13, 40, 152, DoRobotLeft, DoRobotDraw, 0, 14, 0xa, 3, 7, 0},
-        {12, 1, 2, 56, DoRobotDown, DoRobotDraw, 2, 13, 0x3, 3, 0, 0},
-        {3, 4, 32, 100, DoRobotDown, DoRobotDraw, 1, 13, 0x4, 3, 1, 0},
-        {21, 6, 48, 100, DoRobotDown, DoRobotDraw, 1, 13, 0x6, 3, 2, 0},
-        {26, 6, 4, 100, DoRobotUp, DoRobotDraw, 3, 13, 0x2, 3, 3, 0},
+        {15, 3, 120, 192, DoRobotRight, DoRobotDraw, DoNothing, 0, 14, 0xe, 3, 0, 0},
+        {14, 7, 112, 144, DoRobotRight, DoRobotDraw, DoNothing, 1, 14, 0xc, 3, 0, 0},
+        {15, 13, 40, 152, DoRobotLeft, DoRobotDraw, DoNothing, 0, 14, 0xa, 3, 7, 0},
+        {12, 1, 2, 56, DoRobotDown, DoRobotDraw, DoNothing, 2, 13, 0x3, 3, 0, 0},
+        {3, 4, 32, 100, DoRobotDown, DoRobotDraw, DoNothing, 1, 13, 0x4, 3, 1, 0},
+        {21, 6, 48, 100, DoRobotDown, DoRobotDraw, DoNothing, 1, 13, 0x6, 3, 2, 0},
+        {26, 6, 4, 100, DoRobotUp, DoRobotDraw, DoNothing, 3, 13, 0x2, 3, 3, 0},
         NOROBOT
     },
     {
-        {15, 0, 0, 100, DoRobotKong, DoRobotDraw, 4, 8, 0xe, 1, 0, 0},
-        {9, 13, 8, 72, DoRobotLeft, DoRobotDraw, 0, 9, 0x6, 3, 7, 0},
-        {11, 11, 88, 120, DoRobotRight, DoRobotDraw, 1, 9, 0x2, 3, 0, 0},
-        {25, 6, 200, 224, DoRobotRight, DoRobotDraw, 0, 9, 0x3, 3, 0, 0},
+        {15, 0, 0, 100, DoRobotKong, DoRobotDraw, DoNothing, 4, 8, 0xe, 1, 0, 0},
+        {9, 13, 8, 72, DoRobotLeft, DoRobotDraw, DoNothing, 0, 9, 0x6, 3, 7, 0},
+        {11, 11, 88, 120, DoRobotRight, DoRobotDraw, DoNothing, 1, 9, 0x2, 3, 0, 0},
+        {25, 6, 200, 224, DoRobotRight, DoRobotDraw, DoNothing, 0, 9, 0x3, 3, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {7, 1, 56, 232, DoRobotRight, DoRobotDraw, 0, 16, 0x3, 3, 0, 0},
-        {16, 4, 56, 232, DoRobotRight, DoRobotDraw, 1, 16, 0xc, 3, 0, 0},
-        {20, 7, 80, 208, DoRobotLeft, DoRobotDraw, 0, 16, 0x6, 3, 7, 0},
-        {18, 10, 56, 232, DoRobotRight, DoRobotDraw, 1, 16, 0x2, 3, 0, 0},
-        {5, 1, 8, 100, DoRobotDown, DoRobotDraw, 2, 15, 0x7, 3, 0, 0},
+        {7, 1, 56, 232, DoRobotRight, DoRobotDraw, DoNothing, 0, 16, 0x3, 3, 0, 0},
+        {16, 4, 56, 232, DoRobotRight, DoRobotDraw, DoNothing, 1, 16, 0xc, 3, 0, 0},
+        {20, 7, 80, 208, DoRobotLeft, DoRobotDraw, DoNothing, 0, 16, 0x6, 3, 7, 0},
+        {18, 10, 56, 232, DoRobotRight, DoRobotDraw, DoNothing, 1, 16, 0x2, 3, 0, 0},
+        {5, 1, 8, 100, DoRobotDown, DoRobotDraw, DoNothing, 2, 15, 0x7, 3, 0, 0},
         NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {1, 0, 0, 72, DoRobotSkylab, DoRobotDraw, 4, 17, 0xa, 7, 0, 0},
-        {11, 0, 0, 32, DoRobotSkylab, DoRobotDraw, 1, 17, 0x5, 7, 0, 0},
-        {21, 2, 2, 56, DoRobotSkylab, DoRobotDraw, 3, 17, 0xc, 7, 0, 0},
+        {1, 0, 0, 72, DoRobotSkylab, DoRobotDraw, DoNothing, 4, 17, 0xa, 7, 0, 0},
+        {11, 0, 0, 32, DoRobotSkylab, DoRobotDraw, DoNothing, 1, 17, 0x5, 7, 0, 0},
+        {21, 2, 2, 56, DoRobotSkylab, DoRobotDraw, DoNothing, 3, 17, 0xc, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {17, 13, 136, 152, DoRobotRight, DoRobotDraw, 0, 19, 0x7, 3, 0, 0},
-        {9, 5, 36, 102, DoRobotDown, DoRobotDraw, 2, 18, 0xc, 3, 0, 0},
-        {15, 8, 36, 102, DoRobotDown, DoRobotDraw, 1, 18, 0xa, 3, 1, 0},
-        {21, 10, 32, 104, DoRobotUp, DoRobotDraw, 3, 18, 0x6, 3, 2, 0},
+        {17, 13, 136, 152, DoRobotRight, DoRobotDraw, DoNothing, 0, 19, 0x7, 3, 0, 0},
+        {9, 5, 36, 102, DoRobotDown, DoRobotDraw, DoNothing, 2, 18, 0xc, 3, 0, 0},
+        {15, 8, 36, 102, DoRobotDown, DoRobotDraw, DoNothing, 1, 18, 0xa, 3, 1, 0},
+        {21, 10, 32, 104, DoRobotUp, DoRobotDraw, DoNothing, 3, 18, 0x6, 3, 2, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {9, 13, 8, 144, DoRobotRight, DoRobotDraw, 0, 20, 0xc, 7, 0, 0},
-        {1, 10, 8, 56, DoRobotRight, DoRobotDraw, 0, 20, 0x6, 7, 0, 0},
-        {18, 7, 144, 184, DoRobotRight, DoRobotDraw, 0, 20, 0x3, 7, 0, 0},
-        {26, 5, 200, 232, DoRobotRight, DoRobotDraw, 1, 20, 0x5, 7, 0, 0},
+        {9, 13, 8, 144, DoRobotRight, DoRobotDraw, DoNothing, 0, 20, 0xc, 7, 0, 0},
+        {1, 10, 8, 56, DoRobotRight, DoRobotDraw, DoNothing, 0, 20, 0x6, 7, 0, 0},
+        {18, 7, 144, 184, DoRobotRight, DoRobotDraw, DoNothing, 0, 20, 0x3, 7, 0, 0},
+        {26, 5, 200, 232, DoRobotRight, DoRobotDraw, DoNothing, 1, 20, 0x5, 7, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT
     },
     {
-        {5, 13, 40, 64, DoRobotRight, DoRobotDraw, 1, 21, 0x9, 3, 0, 0},
-        {12, 13, 96, 200, DoRobotRight, DoRobotDraw, 0, 21, 0xe, 3, 0, 0},
-        {3, 8, 64, 102, DoRobotDown, DoRobotDraw, 2, 25, 0x6, 3, 0, 0},
-        {10, 8, 3, 96, DoRobotUp, DoRobotDraw, 3, 25, 0x3, 3, 1, 0},
-        {19, 6, 0, 64, DoRobotDown, DoRobotDraw, 1, 25, 0x7, 3, 2, 0},
-        {27, 0, 4, 96, DoRobotDown, DoRobotDraw, 4, 25, 0x1, 3, 3, 0},
+        {5, 13, 40, 64, DoRobotRight, DoRobotDraw, DoNothing, 1, 21, 0x9, 3, 0, 0},
+        {12, 13, 96, 200, DoRobotRight, DoRobotDraw, DoNothing, 0, 21, 0xe, 3, 0, 0},
+        {3, 8, 64, 102, DoRobotDown, DoRobotDraw, DoNothing, 2, 25, 0x6, 3, 0, 0},
+        {10, 8, 3, 96, DoRobotUp, DoRobotDraw, DoNothing, 3, 25, 0x3, 3, 1, 0},
+        {19, 6, 0, 64, DoRobotDown, DoRobotDraw, DoNothing, 1, 25, 0x7, 3, 2, 0},
+        {27, 0, 4, 96, DoRobotDown, DoRobotDraw, DoNothing, 4, 25, 0x1, 3, 3, 0},
         NOROBOT, NOROBOT
     },
     {
-        {12, 3, 96, 144, DoRobotRight, DoRobotDraw, 1, 11, 0x4, 3, 0, 0},
-        {16, 10, 96, 136, DoRobotRight, DoRobotDraw, 1, 11, 0x5, 3, 0, 0},
-        {16, 6, 96, 136, DoRobotRight, DoRobotDraw, 0, 11, 0x3, 3, 0, 0},
-        {16, 13, 96, 144, DoRobotLeft, DoRobotDraw, 0, 11, 0x6, 3, 7, 0},
-        {5, 1, 5, 104, DoRobotDown, DoRobotDraw, 3, 26, 0x7, 3, 0, 0},
-        {10, 1, 5, 104, DoRobotDown, DoRobotDraw, 2, 26, 0xc, 3, 1, 0},
-        {20, 1, 5, 104, DoRobotDown, DoRobotDraw, 4, 26, 0x9, 3, 2, 0},
-        {25, 1, 5, 104, DoRobotDown, DoRobotDraw, 1, 26, 0xe, 3, 3, 0}
+        {12, 3, 96, 144, DoRobotRight, DoRobotDraw, DoNothing, 1, 11, 0x4, 3, 0, 0},
+        {16, 10, 96, 136, DoRobotRight, DoRobotDraw, DoNothing, 1, 11, 0x5, 3, 0, 0},
+        {16, 6, 96, 136, DoRobotRight, DoRobotDraw, DoNothing, 0, 11, 0x3, 3, 0, 0},
+        {16, 13, 96, 144, DoRobotLeft, DoRobotDraw, DoNothing, 0, 11, 0x6, 3, 7, 0},
+        {5, 1, 5, 104, DoRobotDown, DoRobotDraw, DoNothing, 3, 26, 0x7, 3, 0, 0},
+        {10, 1, 5, 104, DoRobotDown, DoRobotDraw, DoNothing, 2, 26, 0xc, 3, 1, 0},
+        {20, 1, 5, 104, DoRobotDown, DoRobotDraw, DoNothing, 4, 26, 0x9, 3, 2, 0},
+        {25, 1, 5, 104, DoRobotDown, DoRobotDraw, DoNothing, 1, 26, 0xe, 3, 3, 0}
     },
     {
-        {24, 3, 184, 232, DoRobotRight, DoRobotDraw, 0, 23, 0x8, 3, 0, 0},
-        {28, 6, 176, 232, DoRobotRight, DoRobotDraw, 0, 23, 0x5, 3, 0, 0},
-        {29, 9, 184, 232, DoRobotLeft, DoRobotDraw, 1, 23, 0x9, 3, 7, 0},
-        {16, 13, 104, 232, DoRobotRight, DoRobotDraw, 0, 23, 0x1, 3, 0, 0},
-        {5, 8, 2, 102, DoRobotDown, DoRobotDraw, 3, 22, 0x9, 3, 0, 0},
-        {11, 7, 48, 102, DoRobotUp, DoRobotDraw, 2, 22, 0x1, 3, 1, 0},
-        {16, 10, 4, 80, DoRobotDown, DoRobotDraw, 1, 22, 0x8, 3, 2, 0},
+        {24, 3, 184, 232, DoRobotRight, DoRobotDraw, DoRobotSpg, 0, 23, 0x8, 3, 0, 0},
+        {28, 6, 176, 232, DoRobotRight, DoRobotDraw, DoRobotSpg, 0, 23, 0x5, 3, 0, 0},
+        {29, 9, 184, 232, DoRobotLeft, DoRobotDraw, DoRobotSpg, 1, 23, 0x9, 3, 7, 0},
+        {16, 13, 104, 232, DoRobotRight, DoRobotDraw, DoRobotSpg, 0, 23, 0x1, 3, 0, 0},
+        {5, 8, 2, 102, DoRobotDown, DoRobotDraw, DoRobotSpg, 3, 22, 0x9, 3, 0, 0},
+        {11, 7, 48, 102, DoRobotUp, DoRobotDraw, DoRobotSpg, 2, 22, 0x1, 3, 1, 0},
+        {16, 10, 4, 80, DoRobotDown, DoRobotDraw, DoRobotSpg, 1, 22, 0x8, 3, 2, 0},
         NOROBOT
     },
     {
-        {7, 13, 56, 176, DoRobotRight, DoRobotDraw, 0, 24, 0x6, 3, 0, 0},
-        {24, 6, 40, 103, DoRobotDown, DoRobotDraw, 1, 15, 0x7, 3, 0, 0},
+        {7, 13, 56, 176, DoRobotRight, DoRobotDraw, DoNothing, 0, 24, 0x6, 3, 0, 0},
+        {24, 6, 40, 103, DoRobotDown, DoRobotDraw, DoNothing, 1, 15, 0x7, 3, 0, 0},
         NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT, NOROBOT
     }
 };
@@ -379,15 +381,14 @@ static int      robotAlign[8] = {4, 6, 6, 6, 6, 6, 6, 6};
 
 static ROBOT    robotThis[8], *curRobot;
 
-void Robots_SetSpgTiles(void)
+void DoRobotSpg(void)
 {
-    int robot;
+    int     count;
+    int     tile = curRobot->tile, adj = 1;
 
-    curRobot = &robotThis[0];
-    // 7 robots here
-    for (robot = 0; robot < 7; robot++, curRobot++)
+    for (count = 0; count < robotAlign[curRobot->y & 7]; count++, tile += adj, adj ^= 30)
     {
-        Level_SetSpgTiles(curRobot->tile, robotAlign[curRobot->y & 7], B_ROBOT);
+        Level_SetSpgTile(tile, B_ROBOT);
     }
 }
 
@@ -553,6 +554,7 @@ void Robots_Ticker()
     for (count = 0; count < 8; count++, curRobot++)
     {
         curRobot->DoMove();
+        curRobot->DoSpg();
     }
 }
 
@@ -582,6 +584,7 @@ void Robots_Init()
     {
         robot->DoMove = start->DoMove;
         robot->DoDraw = start->DoDraw;
+        robot->DoSpg = start->DoSpg;
         robot->x = start->x * 8;
         if (gameLevel == SKYLAB)
         {
