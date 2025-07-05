@@ -846,6 +846,8 @@ static int      curPos;
 static u8       *conveyRotate[2];
 static EVENT    DoWall;
 
+static int      levelItemCount;
+
 // this is used for tiles that transition to another tile: collapse, wall, etc
 static u8       *gfxSpace = (u8 [8])SPACE;
 static u8       levelBG;
@@ -964,6 +966,11 @@ int Level_GetTileType(int tile)
     return type;
 }
 
+int Level_ReduceItemCount()
+{
+    return --levelItemCount;
+}
+
 void Level_Ticker()
 {
     *conveyRotate[0] = (*conveyRotate[0] << 2) | (*conveyRotate[0] >> 6); // left
@@ -986,12 +993,14 @@ void Level_Drawer()
 
 void Level_Init()
 {
-    int     cell, item = 0;
+    int     cell;
     LEVEL   *level = &levelData[gameLevel];
     int     *data = level->data;
     INFO    *info;
     TILE    *tile = &levelTile[0];
     int     dir;
+
+    levelItemCount = 0;
 
     for (cell = 0; cell < 512; cell++, tile++, data++)
     {
@@ -1012,8 +1021,8 @@ void Level_Init()
 
         if (info->type == T_ITEM)
         {
-            tile->ink = (item & 3) + 3;
-            item++;
+            tile->ink = (levelItemCount & 3) + 3;
+            levelItemCount++;
             tile->DoDraw = DoItem;
         }
         else if (info->type == T_COLLAPSE)

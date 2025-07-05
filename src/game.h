@@ -68,6 +68,7 @@ void Level_TileDelete(int);
 void Level_Switch(int);
 void Level_SetSpgTile(int, int);
 int Level_GetSpgTile(int);
+int Level_ReduceItemCount(void);
 
 // miner
 extern u8   minerX, minerY;

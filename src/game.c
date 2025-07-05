@@ -8,10 +8,7 @@
 
 static int      gameMusic = MUS_PLAY;
 
-static int      itemData[20] = {5, 5, 5, 5, 5, 5, 5, 4, 1, 5, 5, 5, 5, 4, 3, 4, 5, 1, 3, 5};
 static int      airData[20] = {224, 224, 220, 220, 220, 220, 220, 220, 220, 224, 220, 220, 224, 224, 224, 224, 220, 220, 224, 224};
-
-static int      itemCount;
 
 static int      levelBorder[20] = {0xb, 0x1, 0xa, 0xd, 0xb, 0x0, 0x4, 0x5, 0x1, 0x9, 0x1, 0x5, 0xa, 0x1, 0xb, 0xd, 0x8, 0x1, 0x0, 0x5};
 
@@ -144,9 +141,7 @@ void Game_GotItem(int tile)
 
     Game_ScoreAdd(100);
 
-    itemCount--;
-
-    if (itemCount > 0)
+    if (Level_ReduceItemCount() > 0)
     {
         return;
     }
@@ -283,8 +278,6 @@ static void DoGameInit()
     gameAirOld = 224;
     gameAir = airData[gameLevel] * 8;
     Game_DrawAir = DoNothing;
-
-    itemCount = itemData[gameLevel];
 
     gameTicks = 0;
 
