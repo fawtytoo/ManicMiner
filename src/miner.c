@@ -14,7 +14,6 @@ typedef struct
 {
     int     x, y;
     int     frame;
-    int     dir;
     u8      ink;
 }
 MINER;
@@ -32,23 +31,23 @@ JUMP;
 
 static u16      minerSprite[8][16] =
 {
+    {1536, 15872, 31744, 13312, 15872, 15360, 6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464},
+    {384, 3968, 7936, 3328, 3968, 3840, 1536, 3840, 7040, 7040, 7040, 7552, 3840, 1536, 1536, 1792},
+    {96, 992, 1984, 832, 992, 960, 384, 960, 2016, 2016, 3952, 4016, 960, 1888, 1760, 1904},
+    {24, 248, 496, 208, 248, 240, 96, 240, 504, 1020, 2046, 1782, 248, 474, 782, 900},
     {96, 124, 62, 44, 124, 60, 24, 60, 126, 126, 239, 223, 60, 110, 118, 238},
     {384, 496, 248, 176, 496, 240, 96, 240, 504, 472, 472, 440, 240, 96, 96, 224},
     {1536, 1984, 992, 704, 1984, 960, 384, 960, 2016, 2016, 3824, 3568, 960, 1760, 1888, 3808},
-    {6144, 7936, 3968, 2816, 7936, 3840, 1536, 3840, 8064, 16320, 32736, 28512, 7936, 23424, 28864, 8640},
-    {24, 248, 496, 208, 248, 240, 96, 240, 504, 1020, 2046, 1782, 248, 474, 782, 900},
-    {96, 992, 1984, 832, 992, 960, 384, 960, 2016, 2016, 3952, 4016, 960, 1888, 1760, 1904},
-    {384, 3968, 7936, 3328, 3968, 3840, 1536, 3840, 7040, 7040, 7040, 7552, 3840, 1536, 1536, 1792},
-    {1536, 15872, 31744, 13312, 15872, 15360, 6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464}
+    {6144, 7936, 3968, 2816, 7936, 3840, 1536, 3840, 8064, 16320, 32736, 28512, 7936, 23424, 28864, 8640}
 };
 
 static MINER    minerStart[20] =
 {
-    {2, 13, 0, D_RIGHT, 0x8}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7}, {29, 13, 4, D_LEFT, 0x4},
-    {1, 3, 0, D_RIGHT, 0x7}, {15, 3, 7, D_LEFT, 0x6}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
-    {1, 13, 0, D_RIGHT, 0x7}, {1, 4, 0, D_RIGHT, 0x7}, {3, 1, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
-    {29, 13, 0, D_RIGHT, 0x7}, {29, 13, 0, D_RIGHT, 0x0}, {2, 13, 0, D_RIGHT, 0x7}, {2, 13, 0, D_RIGHT, 0x7},
-    {1, 3, 7, D_LEFT, 0x7}, {29, 13, 7, D_LEFT, 0x7}, {14, 10, 0, D_RIGHT, 0x5}, {27, 13, 4, D_LEFT, 0x7}
+    {2, 13, 4, 0x8}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7}, {29, 13, 3, 0x4},
+    {1, 3, 4, 0x7}, {15, 3, 0, 0x6}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7},
+    {1, 13, 4, 0x7}, {1, 4, 4, 0x7}, {3, 1, 4, 0x7}, {2, 13, 4, 0x7},
+    {29, 13, 4, 0x7}, {29, 13, 4, 0x0}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7},
+    {1, 3, 0, 0x7}, {29, 13, 0, 0x7}, {14, 10, 4, 0x5}, {27, 13, 3, 0x7}
 };
 
 static JUMP     jumpInfo[18] =
@@ -78,7 +77,6 @@ static int      minerAir, jumpStage;
 static u8       minerInk;
 
 static u8       minerSeqIndex;
-static int      minerSeq[8] = {0, 1, 2, 3, 7, 6, 5, 4};
 static TIMER    minerTimer;
 
 u8              minerX, minerY;
@@ -98,7 +96,7 @@ void Miner_IncSeq()
 
 void Miner_DrawSeqSprite(int pos, u8 paper, u8 ink)
 {
-    Video_Sprite(pos, minerSprite[minerSeq[minerSeqIndex]], paper, ink);
+    Video_Sprite(pos, minerSprite[minerSeqIndex], paper, ink);
 }
 
 static int IsSolid(int tile)
@@ -138,9 +136,9 @@ static void MoveLeftRight()
 
     if (minerDir == D_LEFT)
     {
-        if (minerFrame > 4)
+        if (minerFrame < 3)
         {
-            minerFrame--;
+            minerFrame++;
             return;
         }
 
@@ -151,11 +149,11 @@ static void MoveLeftRight()
 
         minerTile--;
         minerX -= 8;
-        minerFrame = 7;
+        minerFrame = 0;
     }
     else
     {
-        if (minerFrame < 3)
+        if (minerFrame < 7)
         {
             minerFrame++;
             return;
@@ -168,7 +166,7 @@ static void MoveLeftRight()
 
         minerTile++;
         minerX += 8;
-        minerFrame = 0;
+        minerFrame = 4;
     }
 }
 
@@ -278,7 +276,7 @@ static void MinerMove()
                 {
                     minerDir = D_LEFT;
                     minerMove = 0;
-                    minerFrame += 4;
+                    minerFrame ^= 7;
                 }
                 else
                 {
@@ -291,7 +289,7 @@ static void MinerMove()
                 {
                     minerDir = D_RIGHT;
                     minerMove = 0;
-                    minerFrame &= 3;
+                    minerFrame ^= 7;
                 }
                 else
                 {
@@ -380,7 +378,7 @@ void Miner_Init()
     minerTile = start->y * 32 + start->x;
     minerAlign = 4;
     minerFrame = start->frame;
-    minerDir = start->dir;
+    minerDir = start->frame >> 2;
     minerMove = 0;
     minerAir = 0;
 

@@ -338,7 +338,7 @@ void Game_GameReset()
     Game_ExtraLife = DoNothing;
     Game_DrawHiScore();
 
-    Miner_SetSeq(4, 20);
+    Miner_SetSeq(0, 20);
     Game_DrawLives();
 
     if (cheatEnabled)
