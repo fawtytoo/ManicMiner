@@ -3,94 +3,110 @@
 #include "game.h"
 #include "audio.h"
 
-enum
-{
-    D_LEFT,
-    D_RIGHT,
-    D_JUMP
-};
-
+// start positions -------------------------------------------------------------
 typedef struct
 {
     int     x, y;
     int     frame;
     u8      ink;
 }
-MINER;
+START;
 
+static START    minerStart[20] =
+{
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x8},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 3, .ink = 0x4},
+    {.x =  1, .y =  3, .frame = 4, .ink = 0x7},
+    {.x = 15, .y =  3, .frame = 0, .ink = 0x6},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  1, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  1, .y =  4, .frame = 4, .ink = 0x7},
+    {.x =  3, .y =  1, .frame = 4, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 4, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 4, .ink = 0x0},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
+    {.x =  1, .y =  3, .frame = 0, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 0, .ink = 0x7},
+    {.x = 14, .y = 10, .frame = 4, .ink = 0x5},
+    {.x = 27, .y = 13, .frame = 3, .ink = 0x7}
+};
+
+// jump stage info -------------------------------------------------------------
 typedef struct
 {
-    int y;
-    int tile;
-    int align;
+    int     y;
+    int     tile;
+    int     align;
     // sfx
-    int length;
-    int pitch;
+    int     pitch;
+    int     duration;
 }
 JUMP;
 
-static u16      minerSprite[8][16] =
-{
-    {1536, 15872, 31744, 13312, 15872, 15360, 6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464},
-    {384, 3968, 7936, 3328, 3968, 3840, 1536, 3840, 7040, 7040, 7040, 7552, 3840, 1536, 1536, 1792},
-    {96, 992, 1984, 832, 992, 960, 384, 960, 2016, 2016, 3952, 4016, 960, 1888, 1760, 1904},
-    {24, 248, 496, 208, 248, 240, 96, 240, 504, 1020, 2046, 1782, 248, 474, 782, 900},
-    {96, 124, 62, 44, 124, 60, 24, 60, 126, 126, 239, 223, 60, 110, 118, 238},
-    {384, 496, 248, 176, 496, 240, 96, 240, 504, 472, 472, 440, 240, 96, 96, 224},
-    {1536, 1984, 992, 704, 1984, 960, 384, 960, 2016, 2016, 3824, 3568, 960, 1760, 1888, 3808},
-    {6144, 7936, 3968, 2816, 7936, 3840, 1536, 3840, 8064, 16320, 32736, 28512, 7936, 23424, 28864, 8640}
-};
-
-static MINER    minerStart[20] =
-{
-    {2, 13, 4, 0x8}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7}, {29, 13, 3, 0x4},
-    {1, 3, 4, 0x7}, {15, 3, 0, 0x6}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7},
-    {1, 13, 4, 0x7}, {1, 4, 4, 0x7}, {3, 1, 4, 0x7}, {2, 13, 4, 0x7},
-    {29, 13, 4, 0x7}, {29, 13, 4, 0x0}, {2, 13, 4, 0x7}, {2, 13, 4, 0x7},
-    {1, 3, 0, 0x7}, {29, 13, 0, 0x7}, {14, 10, 4, 0x5}, {27, 13, 3, 0x7}
-};
-
 static JUMP     jumpInfo[18] =
 {
-    {-4, -32, 6, 5, 72},
-    {-4, 0, 4, 5, 74},
-    {-3, -32, 6, 4, 76},
-    {-3, 0, 6, 4, 78},
-    {-2, 0, 4, 3, 80},
-    {-2, -32, 6, 3, 82},
-    {-1, 0, 6, 2, 84},
-    {-1, 0, 6, 2, 86},
-    {0, 0, 6, 1, 88},
-    {0, 0, 6, 1, 88},
-    {1, 0, 6, 2, 86},
-    {1, 0, 6, 2, 84},
-    {2, 32, 4, 3, 82},
-    {2, 0, 6, 3, 80},
-    {3, 0, 6, 4, 78},
-    {3, 32, 4, 4, 76},
-    {4, 0, 6, 5, 74},
-    {4, 32, 4, 5, 72}
+    {.y = -4, .tile = -32, .align = 6, .pitch = 72, .duration = 5},
+    {.y = -4, .tile =   0, .align = 4, .pitch = 74, .duration = 5},
+    {.y = -3, .tile = -32, .align = 6, .pitch = 76, .duration = 4},
+    {.y = -3, .tile =   0, .align = 6, .pitch = 78, .duration = 4},
+    {.y = -2, .tile =   0, .align = 4, .pitch = 80, .duration = 3},
+    {.y = -2, .tile = -32, .align = 6, .pitch = 82, .duration = 3},
+    {.y = -1, .tile =   0, .align = 6, .pitch = 84, .duration = 2},
+    {.y = -1, .tile =   0, .align = 6, .pitch = 86, .duration = 2},
+    {.y =  0, .tile =   0, .align = 6, .pitch = 88, .duration = 1},
+    {.y =  0, .tile =   0, .align = 6, .pitch = 88, .duration = 1},
+    {.y =  1, .tile =   0, .align = 6, .pitch = 86, .duration = 2},
+    {.y =  1, .tile =   0, .align = 6, .pitch = 84, .duration = 2},
+    {.y =  2, .tile =  32, .align = 4, .pitch = 82, .duration = 3},
+    {.y =  2, .tile =   0, .align = 6, .pitch = 80, .duration = 3},
+    {.y =  3, .tile =   0, .align = 6, .pitch = 78, .duration = 4},
+    {.y =  3, .tile =  32, .align = 4, .pitch = 76, .duration = 4},
+    {.y =  4, .tile =   0, .align = 6, .pitch = 74, .duration = 5},
+    {.y =  4, .tile =  32, .align = 4, .pitch = 72, .duration = 5}
+};
+
+// -----------------------------------------------------------------------------
+#define D_LEFT      0
+#define D_RIGHT     1
+#define D_JUMP      2
+
+static u16      minerSprite[8][16] =
+{
+    { 1536, 15872, 31744, 13312, 15872, 15360,  6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464},
+    {  384,  3968,  7936,  3328,  3968,  3840,  1536,  3840,  7040,  7040,  7040,  7552,  3840,  1536,  1536,  1792},
+    {   96,   992,  1984,   832,   992,   960,   384,   960,  2016,  2016,  3952,  4016,   960,  1888,  1760,  1904},
+    {   24,   248,   496,   208,   248,   240,    96,   240,   504,  1020,  2046,  1782,   248,   474,   782,   900},
+    {   96,   124,    62,    44,   124,    60,    24,    60,   126,   126,   239,   223,    60,   110,   118,   238},
+    {  384,   496,   248,   176,   496,   240,    96,   240,   504,   472,   472,   440,   240,    96,    96,   224},
+    { 1536,  1984,   992,   704,  1984,   960,   384,   960,  2016,  2016,  3824,  3568,   960,  1760,  1888,  3808},
+    { 6144,  7936,  3968,  2816,  7936,  3840,  1536,  3840,  8064, 16320, 32736, 28512,  7936, 23424, 28864,  8640}
 };
 
 static int      minerFrame, minerDir, minerMove;
 static int      minerAir, jumpStage;
 static u8       minerInk;
 
-static u8       minerSeqIndex;
-static TIMER    minerTimer;
-
 u8              minerX, minerY;
 int             minerTile, minerAlign;
 
+// sprite sequencing -----------------------------------------------------------
+static u8       minerSeqIndex;
+static TIMER    minerSeqTimer;
+
 void Miner_SetSeq(int index, int speed)
 {
-    Timer_Set(&minerTimer, 1, speed);
+    Timer_Set(&minerSeqTimer, 1, speed);
     minerSeqIndex = index;
 }
 
 void Miner_IncSeq()
 {
-    minerSeqIndex += Timer_Update(&minerTimer);
+    minerSeqIndex += Timer_Update(&minerSeqTimer);
     minerSeqIndex &= 7;
 }
 
@@ -99,6 +115,7 @@ void Miner_DrawSeqSprite(int pos, u8 paper, u8 ink)
     Video_Sprite(pos, minerSprite[minerSeqIndex], paper, ink);
 }
 
+// -----------------------------------------------------------------------------
 static int IsSolid(int tile)
 {
     if (Level_GetTileType(tile) == T_SOLID)
@@ -172,11 +189,14 @@ static void MoveLeftRight()
 
 static void MinerMove()
 {
-    int i, tile, conveyDir = C_NONE, type[2];
+    int     i, tile, conveyDir = C_NONE, type[2];
+    JUMP    *jump;
 
     if (minerAir == 1)
     {
-        tile = minerTile + jumpInfo[jumpStage].tile;
+        jump = &jumpInfo[jumpStage];
+
+        tile = minerTile + jump->tile;
         if (Level_GetTileType(tile) == T_SOLID || Level_GetTileType(tile + 1) == T_SOLID)
         {
             minerAir = 2;
@@ -184,11 +204,11 @@ static void MinerMove()
             return;
         }
 
-        Audio_MinerSfx(jumpInfo[jumpStage].pitch, jumpInfo[jumpStage].length);
+        Audio_MinerSfx(jump->pitch, jump->duration);
 
-        minerY += jumpInfo[jumpStage].y;
+        minerY += jump->y;
         minerTile = tile;
-        minerAlign = jumpInfo[jumpStage].align;
+        minerAlign = jump->align;
         jumpStage++;
 
         if (jumpStage == 18)
@@ -371,7 +391,7 @@ void DoMinerDrawer()
 
 void Miner_Init()
 {
-    MINER   *start = &minerStart[gameLevel];
+    START   *start = &minerStart[gameLevel];
 
     minerX = start->x * 8;
     minerY = start->y * 8;
