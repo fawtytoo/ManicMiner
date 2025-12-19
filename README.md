@@ -46,3 +46,8 @@ ENTER. Levels lower than 10 do not need to be preceded by a zero, i.e. 01 or 1
 has the same effect.
 
 Both cheat codes from the Bug-Byte and Software Projects versions are supported.
+
+# Windows build?
+
+Adding support for Windows is not planned. However, AukonDK of the [Jet Set Willy & Manic Miner community](https://jswmm.co.uk/)
+has kindly provided a 64bit of both Manic Miner & JetSet Willy for Windows available here: [MM and JSW ports to SDL2](https://jswmm.co.uk/topic/791-mm-and-jsw-ports-to-sdl2/).
