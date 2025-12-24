@@ -358,28 +358,31 @@ static void MinerMove()
 
 void DoMinerTicker()
 {
-    int cell, tile, type;
-    int adj = 1;
+    int     cell, tile;
+    int     adj = 1;
 
     MinerMove();
 
     tile = minerTile;
     for (cell = 0; cell < minerAlign; cell++, tile += adj, adj ^= 30)
     {
-        Level_SetSpgTile(tile, B_MINER);
-
-        type = Level_GetTileType(tile);
-        if (type == T_ITEM)
+        switch (Level_GetTileType(tile))
         {
+          case T_ITEM:
             Game_GotItem(tile);
-        }
-        else if (type == T_SWITCHOFF)
-        {
+            break;
+
+          case T_SWITCHOFF:
             Level_Switch(tile);
-        }
-        else if (type == T_HARM)
-        {
+            break;
+
+          case T_HARM:
             Action = Die_Action;
+            break;
+
+          case T_SPACE:
+            Level_SetSpgTile(tile, B_MINER);
+            break;
         }
     }
 }
