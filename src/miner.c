@@ -3,37 +3,41 @@
 #include "game.h"
 #include "audio.h"
 
+#define D_RIGHT     0
+#define D_LEFT      1
+#define D_JUMP      2
+
 // start positions -------------------------------------------------------------
 typedef struct
 {
     int     x, y;
-    int     frame;
+    int     frame, dir;
     u8      ink;
 }
 START;
 
 static START    minerStart[20] =
 {
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x8},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x = 29, .y = 13, .frame = 3, .ink = 0x4},
-    {.x =  1, .y =  3, .frame = 4, .ink = 0x7},
-    {.x = 15, .y =  3, .frame = 0, .ink = 0x6},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  1, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  1, .y =  4, .frame = 4, .ink = 0x7},
-    {.x =  3, .y =  1, .frame = 4, .ink = 0x7},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x = 29, .y = 13, .frame = 4, .ink = 0x7},
-    {.x = 29, .y = 13, .frame = 4, .ink = 0x0},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  2, .y = 13, .frame = 4, .ink = 0x7},
-    {.x =  1, .y =  3, .frame = 0, .ink = 0x7},
-    {.x = 29, .y = 13, .frame = 0, .ink = 0x7},
-    {.x = 14, .y = 10, .frame = 4, .ink = 0x5},
-    {.x = 27, .y = 13, .frame = 3, .ink = 0x7}
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x8},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 0, .dir = D_LEFT,  .ink = 0x4},
+    {.x =  1, .y =  3, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x = 15, .y =  3, .frame = 3, .dir = D_LEFT,  .ink = 0x6},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  1, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  1, .y =  4, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  3, .y =  1, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x0},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  2, .y = 13, .frame = 0, .dir = D_RIGHT, .ink = 0x7},
+    {.x =  1, .y =  3, .frame = 3, .dir = D_LEFT,  .ink = 0x7},
+    {.x = 29, .y = 13, .frame = 3, .dir = D_LEFT,  .ink = 0x7},
+    {.x = 14, .y = 10, .frame = 0, .dir = D_RIGHT, .ink = 0x5},
+    {.x = 27, .y = 13, .frame = 0, .dir = D_LEFT,  .ink = 0x7}
 };
 
 // jump stage info -------------------------------------------------------------
@@ -71,20 +75,16 @@ static JUMP     jumpInfo[18] =
 };
 
 // -----------------------------------------------------------------------------
-#define D_LEFT      0
-#define D_RIGHT     1
-#define D_JUMP      2
-
 static u16      minerSprite[8][16] =
 {
-    { 1536, 15872, 31744, 13312, 15872, 15360,  6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464},
-    {  384,  3968,  7936,  3328,  3968,  3840,  1536,  3840,  7040,  7040,  7040,  7552,  3840,  1536,  1536,  1792},
-    {   96,   992,  1984,   832,   992,   960,   384,   960,  2016,  2016,  3952,  4016,   960,  1888,  1760,  1904},
-    {   24,   248,   496,   208,   248,   240,    96,   240,   504,  1020,  2046,  1782,   248,   474,   782,   900},
     {   96,   124,    62,    44,   124,    60,    24,    60,   126,   126,   239,   223,    60,   110,   118,   238},
     {  384,   496,   248,   176,   496,   240,    96,   240,   504,   472,   472,   440,   240,    96,    96,   224},
     { 1536,  1984,   992,   704,  1984,   960,   384,   960,  2016,  2016,  3824,  3568,   960,  1760,  1888,  3808},
-    { 6144,  7936,  3968,  2816,  7936,  3840,  1536,  3840,  8064, 16320, 32736, 28512,  7936, 23424, 28864,  8640}
+    { 6144,  7936,  3968,  2816,  7936,  3840,  1536,  3840,  8064, 16320, 32736, 28512,  7936, 23424, 28864,  8640},
+    {   24,   248,   496,   208,   248,   240,    96,   240,   504,  1020,  2046,  1782,   248,   474,   782,   900},
+    {   96,   992,  1984,   832,   992,   960,   384,   960,  2016,  2016,  3952,  4016,   960,  1888,  1760,  1904},
+    {  384,  3968,  7936,  3328,  3968,  3840,  1536,  3840,  7040,  7040,  7040,  7552,  3840,  1536,  1536,  1792},
+    { 1536, 15872, 31744, 13312, 15872, 15360,  6144, 15360, 32256, 32256, 63232, 64256, 15360, 30208, 28160, 30464}
 };
 
 static int      minerFrame, minerDir, minerMove;
@@ -95,13 +95,15 @@ u8              minerX, minerY;
 int             minerTile, minerAlign;
 
 // sprite sequencing -----------------------------------------------------------
-static u8       minerSeqIndex;
-static TIMER    minerSeqTimer;
+static u8           minerSeqIndex;
+static TIMER        minerSeqTimer;
+
+static const int    minerSequence[8] = {0, 1, 2, 3, 7, 6, 5, 4};
 
 void Miner_SetSeq(int index, int speed)
 {
     Timer_Set(&minerSeqTimer, 1, speed);
-    minerSeqIndex = index;
+    minerSeqIndex = minerSequence[index];
 }
 
 void Miner_IncSeq()
@@ -112,7 +114,7 @@ void Miner_IncSeq()
 
 void Miner_DrawSeqSprite(int pos, u8 paper, u8 ink)
 {
-    Video_Sprite(pos, minerSprite[minerSeqIndex], paper, ink);
+    Video_Sprite(pos, minerSprite[minerSequence[minerSeqIndex]], paper, ink);
 }
 
 // -----------------------------------------------------------------------------
@@ -153,9 +155,9 @@ static void MoveLeftRight()
 
     if (minerDir == D_LEFT)
     {
-        if (minerFrame < 3)
+        if (minerFrame > 0)
         {
-            minerFrame++;
+            minerFrame--;
             return;
         }
 
@@ -166,11 +168,11 @@ static void MoveLeftRight()
 
         minerTile--;
         minerX -= 8;
-        minerFrame = 0;
+        minerFrame = 3;
     }
     else
     {
-        if (minerFrame < 7)
+        if (minerFrame < 3)
         {
             minerFrame++;
             return;
@@ -183,7 +185,7 @@ static void MoveLeftRight()
 
         minerTile++;
         minerX += 8;
-        minerFrame = 4;
+        minerFrame = 0;
     }
 }
 
@@ -296,7 +298,6 @@ static void MinerMove()
                 {
                     minerDir = D_LEFT;
                     minerMove = 0;
-                    minerFrame ^= 7;
                 }
                 else
                 {
@@ -309,7 +310,6 @@ static void MinerMove()
                 {
                     minerDir = D_RIGHT;
                     minerMove = 0;
-                    minerFrame ^= 7;
                 }
                 else
                 {
@@ -389,7 +389,7 @@ void DoMinerTicker()
 
 void DoMinerDrawer()
 {
-    Video_Miner((minerY << 8) | minerX, minerSprite[minerFrame], minerInk);
+    Video_Miner((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk);
 }
 
 void Miner_Init()
@@ -401,7 +401,7 @@ void Miner_Init()
     minerTile = start->y * 32 + start->x;
     minerAlign = 4;
     minerFrame = start->frame;
-    minerDir = start->frame >> 2;
+    minerDir = start->dir;
     minerMove = 0;
     minerAir = 0;
 

@@ -148,7 +148,7 @@ static void DoTitleInit()
 
     textPos = WIDTH;
 
-    Miner_SetSeq(0, 8);
+    Miner_SetSeq(7, 8);
     Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 
     Audio_Music(MUS_TITLE, MUS_PLAY);
