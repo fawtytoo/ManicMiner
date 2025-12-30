@@ -137,12 +137,12 @@ static u16      charSetLarge[128][8] =
     {2097, 2161, 2259, 2463, 782, 1536, 1536, 1024},
     {1024, 1216, 704, 2432, 2048, 2048, 2048, 2048},
     {2048, 2048, 2048, 2048, 0, 0, 0, 0},
-    {65535, 65535, 65535, 0, 65535, 65535, 65535, 65535}, // white note
-    {65535, 65280, 65280, 0, 65280, 65280, 65535, 65535}, // black note
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 255, 255, 255, 255, 255, 0, 0},                     // black note
+    {65535, 65535, 65535, 65535, 65535, 65280, 65280, 0},   // white note l
+    {65280, 65280, 65535, 65535, 65535, 65280, 65280, 0},   // white note m
+    {65280, 65280, 65535, 65535, 65535, 65535, 65535, 0},   // white note r
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0, 0, 0, 0},
@@ -258,18 +258,19 @@ int Video_TextWidth(char *text)
     return l;
 }
 
-void Video_PianoKey(int tile, u8 ink)
+void Video_PianoKey(int pos, int note, int ink)
 {
-    int pos = TILE2PIXEL(tile) - 4;
-    int pixel;
-    int row, bit;
+    int     pixel;
+    int     column, row;
+    u16     *gfx = charSetLarge[note], word;
 
-    for (row = 0; row < 16; row++, pos += WIDTH)
+    for (column = 0; column < 7; column++, pos++, gfx++)
     {
-        pixel =  pos;
-        for (bit = 0; bit < 7; bit++, pixel++)
+        pixel = pos;
+        word = *gfx;
+        for (row = 0; row < 16; row++, pixel += WIDTH, word >>= 1)
         {
-            if (videoPixel[pixel])
+            if (word & 1)
             {
                 System_SetPixel(pixel, ink);
             }
@@ -431,31 +432,6 @@ void Video_Sprite(int pos, u16 *line, u8 paper, u8 ink)
         {
             videoPixel[pixel] = word & 1;
             System_SetPixel(pixel, colour[word & 1]);
-        }
-    }
-}
-
-void Video_DrawPiano()
-{
-    char    *text = "\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17\x18\x18\x18\x17\x18\x18\x17";
-    int     col, bit, pos = 128 * WIDTH;
-    u16     *byte, line;
-    int     pixel;
-    u8      ink[2] = {0x0, 0x7};
-
-    for ( ; *text; text++)
-    {
-        byte = charSetLarge[(int)*text];
-
-        for (col = 0; col < 8; col++, byte++, pos++)
-        {
-            pixel = pos;
-            line = *byte;
-            for (bit = 0; bit < 16; bit++, pixel += WIDTH, line >>= 1)
-            {
-                videoPixel[pixel] = line & 1;
-                System_SetPixel(pixel, ink[line & 1]);
-            }
         }
     }
 }

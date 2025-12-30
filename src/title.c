@@ -132,8 +132,8 @@ static void DoTitleDrawer()
 static void DoTitleInit()
 {
     Title_ScreenCopy();
-    Video_PixelFill(64 * WIDTH, 64 * WIDTH, 0xa);
-    Video_PixelFill(128 * WIDTH, 64 * WIDTH, 0x0);
+    Video_PixelFill(64 * WIDTH, 80 * WIDTH, 0xa);
+    Video_PixelFill(144 * WIDTH, 48 * WIDTH, 0x0);
 
     Video_Write(64 * WIDTH, "\x1\xa\x2\x6\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10");
 
@@ -144,7 +144,7 @@ static void DoTitleInit()
 
     Video_WriteLarge(104 * WIDTH, 6 * 8, "\x2\x0" "PRESS " "\x2\x6" "ENTER" "\x2\x0" " TO START");
 
-    Video_DrawPiano();
+    Video_WriteLarge(KEYBOARD, 4, "\x1\x0\x2\x7\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c");
 
     textPos = WIDTH;
 
