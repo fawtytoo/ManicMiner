@@ -358,13 +358,28 @@ static void MinerMove()
 
 void DoMinerTicker()
 {
-    int     cell, tile;
-    int     adj = 1;
-
     MinerMove();
+}
+
+void DoMinerDrawer()
+{
+    int     tile, adj;
+    int     i;
+
+    Video_Miner((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk);
 
     tile = minerTile;
-    for (cell = 0; cell < minerAlign; cell++, tile += adj, adj ^= 30)
+    for (i = 0, adj = 1; i < minerAlign; i++, tile += adj, adj ^= 30)
+    {
+        if (Level_GetTileType(tile) == T_HARM)
+        {
+            Action = Die_Action;
+            return;
+        }
+    }
+
+    tile = minerTile;
+    for (i = 0, adj = 1; i < minerAlign; i++, tile += adj, adj ^= 30)
     {
         switch (Level_GetTileType(tile))
         {
@@ -376,20 +391,11 @@ void DoMinerTicker()
             Level_Switch(tile);
             break;
 
-          case T_HARM:
-            Action = Die_Action;
-            break;
-
           case T_SPACE:
             Level_SetSpgTile(tile, B_MINER);
             break;
         }
     }
-}
-
-void DoMinerDrawer()
-{
-    Video_Miner((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk);
 }
 
 void Miner_Init()
