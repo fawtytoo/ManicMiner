@@ -12,7 +12,7 @@ void Video_Write(int, char *);
 void Video_WriteLarge(int, int, char *);
 void Video_Sprite(int, u16 *, u8, u8);
 void Video_SpriteBlend(int, u16 *, u8);
-void Video_Miner(int, u16 *, u8);
+int Video_Miner(int, u16 *, u8);
 int Video_Tile(int, u8 *, u8, u8, int);
 void Video_PixelFill(int, int, u8);
 void Video_LevelInkFill(u8);
