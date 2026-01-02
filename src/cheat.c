@@ -1,73 +1,57 @@
-#include "common.h"
+#include "misc.h"
 #include "game.h"
 
-static char     cheatCode[2][11] = {"6031769.", "writetyper."};
-static int      cheatCodeUsed = -1;
+static char     *cheatCode = "6031769";
 static int      cheatPos = 0;
-static int      cheatLevel[2];
 
 int             cheatEnabled = 0;
 EVENT           Cheat_Responder = DoCheatDisabled;
 
 void DoCheatEnabled()
 {
-    int level;
+    int     level = 0;
+    int     i;
 
-    if (gameInput == KEY_ENTER)
+    for (i = 0; i < 10; i++)
     {
-        if (cheatPos > 0)
+        if (System_IsKey(KEY_0 + i))
         {
-            level = cheatLevel[0];
-            if (cheatPos == 2)
-            {
-                level = level * 10 + cheatLevel[1];
-            }
-            level--;
-
-            cheatPos = 0;
-
-            if (level < 0 || level > TWENTY || (level == gameLevel && (gameTicks == 0 || gamePaused == 0)))
-            {
-                Game_Unpause();
-                return;
-            }
-
-            gameLevel = level;
-
-            Action = Game_ChangeLevel;
+            level = i + 1;
+            break;
         }
-        return;
     }
-    else if (gameInput < KEY_0 || gameInput > KEY_9)
+
+    if (!System_IsKey(KEY_ENTER))
     {
         Game_Unpause();
         return;
     }
 
-    if (cheatPos == 2)
+    if (level == 0)
     {
-        cheatPos = 0;
-        Game_Unpause();
         return;
     }
 
-    cheatLevel[cheatPos] = gameInput - KEY_0;
-    cheatPos++;
+    if (System_IsKey(KEY_BACKSPACE))
+    {
+        level += 10;
+    }
+
+    level--;
+    if (level == gameLevel && gameTicks == 0)
+    {
+        return;
+    }
+
+    gameLevel = level;
+
+    Action = Game_ChangeLevel;
 }
 
 void DoCheatDisabled()
 {
-    if (cheatCode[0][cheatPos] == gameInput - KEY_0 + '0' && cheatCodeUsed != 1)
+    if (cheatCode[cheatPos] != gameInput - KEY_0 + '0')
     {
-        cheatCodeUsed = 0;
-    }
-    else if (cheatCode[1][cheatPos] == gameInput - KEY_A + 'a' && cheatCodeUsed != 0)
-    {
-        cheatCodeUsed = 1;
-    }
-    else
-    {
-        cheatCodeUsed = -1;
         cheatPos = 0;
         Game_Unpause();
         return;
@@ -75,7 +59,7 @@ void DoCheatDisabled()
 
     cheatPos++;
 
-    if (cheatCode[cheatCodeUsed][cheatPos] != '.')
+    if (cheatCode[cheatPos] != '\0')
     {
         return;
     }

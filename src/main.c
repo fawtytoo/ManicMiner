@@ -28,9 +28,10 @@ EVENT                       Responder = DoNothing;
 EVENT                       Ticker = DoNothing;
 EVENT                       Drawer = DoNothing;
 
-static const SDL_Keycode    sdlKey[3] =
+static const SDL_Keycode    sdlKey[15] =
 {
-    SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE
+    SDLK_LEFT, SDLK_RIGHT, SDLK_SPACE, SDLK_BACKSPACE, SDLK_RETURN,
+    SDLK_1, SDLK_2, SDLK_3, SDLK_4, SDLK_5, SDLK_6, SDLK_7, SDLK_8, SDLK_9, SDLK_0
 };
 
 void DoNothing()
@@ -126,16 +127,6 @@ static int System_GetEvent()
       case SDLK_8:
       case SDLK_9:
         gameInput = KEY_0 + (event.key.keysym.sym - SDLK_0);
-        break;
-
-      case SDLK_e:
-      case SDLK_i:
-      case SDLK_p:
-      case SDLK_r:
-      case SDLK_t:
-      case SDLK_w:
-      case SDLK_y:
-        gameInput = KEY_A + (event.key.keysym.sym - SDLK_a);
         break;
 
       default:
