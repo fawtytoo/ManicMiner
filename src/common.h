@@ -3,6 +3,9 @@
 
 enum
 {
+    KEY_LEFT,
+    KEY_RIGHT,
+    KEY_JUMP,
     KEY_NONE,
     KEY_ENTER,
     KEY_ESCAPE,

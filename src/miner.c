@@ -274,16 +274,14 @@ static void MinerMove()
                 conveyDir = C_RIGHT;
             }
 
-            System_UpdateKeys();
-
             i = 0;
 
-            if (System_IsKeyLeft() || conveyDir == C_LEFT)
+            if (System_IsKey(KEY_LEFT) || conveyDir == C_LEFT)
             {
                 i += 1;
             }
 
-            if (System_IsKeyRight() || conveyDir == C_RIGHT)
+            if (System_IsKey(KEY_RIGHT) || conveyDir == C_RIGHT)
             {
                 i += 2;
             }
@@ -317,7 +315,7 @@ static void MinerMove()
                 }
             }
 
-            if (System_IsKeyJump())
+            if (System_IsKey(KEY_JUMP))
             {
                 minerAir = 1;
                 jumpStage = 0;

@@ -34,7 +34,4 @@ int Video_Viewport(int, int, int *, int *, int *, int *);
 
 void System_Border(int);
 void System_SetPixel(int, int);
-int System_IsKeyLeft(void);
-int System_IsKeyRight(void);
-int System_IsKeyJump(void);
-void System_UpdateKeys(void);
+int System_IsKey(int);
