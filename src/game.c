@@ -27,7 +27,6 @@ int             gameAir, gameAirOld;
 
 EVENT           Game_ExtraLife = DoNothing;
 EVENT           Game_DrawAir = DoNothing;
-EVENT           Game_Unpause = DoNothing;
 
 EVENT           Spg_Ticker, Spg_Drawer;
 EVENT           Miner_Ticker, Miner_Drawer;
@@ -223,8 +222,13 @@ static void DoGameTicker()
     Action = Trans_Action;
 }
 
-static void GamePause(int paused)
+void Game_Pause(int paused)
 {
+    if (gamePaused == paused)
+    {
+        return;
+    }
+
     gamePaused = paused;
 
     if (paused)
@@ -239,12 +243,6 @@ static void GamePause(int paused)
         Drawer = DoGameDrawer;
         Audio_Play(gameMusic);
     }
-}
-
-static void DoGameUnpause()
-{
-    GamePause(0);
-    Game_Unpause = DoNothing;
 }
 
 static void DoGameInit()
@@ -306,15 +304,13 @@ static void DoGameResponder()
 {
     if (gameInput == KEY_PAUSE)
     {
-        GamePause(1 - gamePaused);
-        Game_Unpause = gamePaused ? DoGameUnpause : DoNothing;
-        return;
+        Game_Pause(1 - gamePaused);
     }
     else if (gameInput == KEY_MUTE)
     {
         gameMusic = gameMusic == MUS_PLAY ? MUS_STOP : MUS_PLAY;
         Audio_Play(gameMusic);
-        Game_Unpause();
+        Game_Pause(0);
     }
     else if (gameInput == KEY_ESCAPE)
     {
@@ -333,7 +329,6 @@ void Game_GameReset()
     gameScore = 0;
 
     gamePaused = 0;
-    Game_Unpause = DoNothing;
 
     Game_ExtraLife = DoNothing;
     Game_DrawHiScore();

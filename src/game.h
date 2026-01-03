@@ -6,12 +6,10 @@ extern int  gameLevel;
 extern int  gameDemo;
 extern int  gameLives;
 extern int  gameAir, gameAirOld;
-extern int  gamePaused;
 extern int  gameTicks;
 
 extern EVENT    Game_DrawAir;
 extern EVENT    Game_ExtraLife;
-extern EVENT    Game_Unpause;
 
 void Game_ScoreAdd(int);
 void Game_ReduceAir(int);
@@ -19,6 +17,7 @@ void Game_GameReset(void);
 void Game_CheckHighScore(void);
 void Game_GotItem(int);
 void Game_ChangeLevel(void);
+void Game_Pause(int);
 
 // cheat
 extern int      cheatEnabled;

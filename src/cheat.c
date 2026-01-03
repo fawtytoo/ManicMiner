@@ -23,7 +23,7 @@ void DoCheatEnabled()
 
     if (!System_IsKey(KEY_ENTER))
     {
-        Game_Unpause();
+        Game_Pause(0);
         return;
     }
 
@@ -53,7 +53,7 @@ void DoCheatDisabled()
     if (cheatCode[cheatPos] != gameInput - KEY_0 + '0')
     {
         cheatPos = 0;
-        Game_Unpause();
+        Game_Pause(0);
         return;
     }
 
