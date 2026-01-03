@@ -32,7 +32,7 @@ void DoCheatEnabled()
         return;
     }
 
-    if (System_IsKey(KEY_BACKSPACE))
+    if (System_IsKey(KEY_LSHIFT) || System_IsKey(KEY_RSHIFT))
     {
         level += 10;
     }
