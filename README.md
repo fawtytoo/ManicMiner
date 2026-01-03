@@ -43,7 +43,7 @@ used to give it a "beepy" sound.
 Cheat mode is activated just like in the original game by typing the code. Once
 activated, switching levels is as simple.
 
-The keyboard numbers 1 to 0 are levels 1 to 10, and the Backspace key changes
+The keyboard numbers 1 to 0 are levels 1 to 10, and the Shift key changes
 that to levels 11 to 20. Then press Enter to change level. These key
 combinations need to be pressed simultaneously.
 
