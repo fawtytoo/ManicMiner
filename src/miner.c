@@ -189,7 +189,7 @@ static void MoveLeftRight()
     }
 }
 
-static void MinerMove()
+void DoMinerTicker()
 {
     int     i, tile, conveyDir = C_NONE, type[2];
     JUMP    *jump;
@@ -352,11 +352,6 @@ static void MinerMove()
     {
         minerTile += 32;
     }
-}
-
-void DoMinerTicker()
-{
-    MinerMove();
 }
 
 void DoMinerDrawer()
