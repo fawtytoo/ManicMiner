@@ -28,7 +28,7 @@ int             gameAir, gameAirOld;
 EVENT           Game_ExtraLife = DoNothing;
 EVENT           Game_DrawAir = DoNothing;
 
-EVENT           Spg_Ticker, Spg_Drawer;
+EVENT           Spg_Drawer;
 EVENT           Miner_Ticker, Miner_Drawer;
 EVENT           Portal_Ticker;
 
@@ -200,7 +200,6 @@ static void DoGameTicker()
     Level_Ticker();
     Robots_Ticker();
     Miner_Ticker();
-    Spg_Ticker();
     Portal_Ticker();
 
     Game_ReduceAir(1);
@@ -258,13 +257,10 @@ static void DoGameInit()
 
     if (gameLevel == SPG)
     {
-        Spg_Ticker = DoSpgTicker;
         Spg_Drawer = DoSpgDrawer;
-        Spg_Ticker(); // prepare initial beam
     }
     else
     {
-        Spg_Ticker = DoNothing;
         Spg_Drawer = DoNothing;
     }
 

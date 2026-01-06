@@ -554,7 +554,6 @@ void Robots_Ticker()
     for (count = 0; count < 8; count++, curRobot++)
     {
         curRobot->DoMove();
-        curRobot->DoSpg();
     }
 }
 
@@ -572,6 +571,7 @@ void Robots_Drawer()
     for (count = 0; count < 8; count++, curRobot++)
     {
         curRobot->DoDraw();
+        curRobot->DoSpg();
     }
 }
 

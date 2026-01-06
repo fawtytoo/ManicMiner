@@ -2,37 +2,22 @@
 #include "game.h"
 #include "video.h"
 
-static int      spgTrace[48];
-static int      spgCount;
-
 void DoSpgDrawer()
 {
-    Video_TileInk(spgTrace[--spgCount], 0x7);
-
-    while (spgCount--)
-    {
-        Video_TilePaper(spgTrace[spgCount], 0x4);
-        Video_TileInk(spgTrace[spgCount], 0x7);
-    }
-}
-
-void DoSpgTicker()
-{
-    int tile = 23, dir = 0;
+    u16     tile = 23, dir = 32;
     int air = 0;
-    int way[2] = {32, -1};
     int this;
-
-    spgCount = 0;
-    spgTrace[spgCount++] = tile;
 
     do
     {
+        Video_TilePaper(tile, 0x4);
+        Video_TileInk(tile, 0x7);
+
         this = Level_GetSpgTile(tile);
 
         if (this & B_ROBOT)
         {
-            dir = 1 - dir;
+            dir ^= ((255 << 8) | 223);
         }
 
         if (this & B_MINER)
@@ -40,11 +25,11 @@ void DoSpgTicker()
             air = 8;
         }
 
-        tile += way[dir];
-
-        spgTrace[spgCount++] = tile;
+        tile += dir;
     }
     while (Level_GetTileType(tile) == T_SPACE);
+
+    Video_TileInk(tile, 0x7);
 
     // it should not matter if Willy is offset vertically
     // the air should reduce at the same rate

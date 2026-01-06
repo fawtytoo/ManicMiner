@@ -94,7 +94,6 @@ void Robots_Barrel(void);
 void Robots_Kong(void);
 
 // spg
-void DoSpgTicker(void);
 void DoSpgDrawer(void);
 
 // title
