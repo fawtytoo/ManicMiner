@@ -5,6 +5,8 @@
 Originally written in 1983 by Matthew Smith. This port is based on the original
 ZX Spectrum version, written in C and using the SDL2 library.
 
+![Manic Miner loading screen](images/ManicMiner.gif)
+
 ## Game play
 
 Game play is 100% identical except for the following differences:
@@ -23,6 +25,8 @@ visually, therefore air depletes by 8 points regardless.
 - The original game had bugs. These have been fixed, such as landing at the end
 of a jump into a solid wall.
 
+![Manic Miner title screen](images/ManicMiner-Title.png)
+
 ## Video & Audio
 
 Some subtle improvements have been made to make the game more enjoyable:
@@ -37,6 +41,8 @@ Some subtle improvements have been made to make the game more enjoyable:
 include stereo panning effects.
 - To give the music and sound effects a retro feel, a square wave generator is
 used to give it a "beepy" sound.
+
+![Manic Miner level 1](images/ManicMiner-Level1.png)
 
 ## Cheat mode
 
