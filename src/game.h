@@ -87,6 +87,7 @@ void DoPortalTicker(void);
 
 // robots
 void Robots_Init(void);
+void Robots_Version(int);
 void Robots_Drawer(void);
 void Robots_Ticker(void);
 void Robots_Eugene(void);

@@ -1,4 +1,4 @@
-#include "common.h"
+#include "misc.h"
 #include "video.h"
 #include "audio.h"
 #include "game.h"
@@ -85,9 +85,19 @@ static u8       titleColour[256] =
     0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0xfc, 0xfc, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c, 0x6c
 };
 
-static char     textTicker[] = "\x1\x0\x2\x2" "M" "\x2\x6" "A" "\x2\x4" "N" "\x2\x5" "I" "\x2\x3" "C " "\x2\x5" "M" "\x2\x3" "I" "\x2\x2" "N" "\x2\x6" "E" "\x2\x4" "R" "\x2\x7" "   (C) Software Projects Ltd. 1983   By Matthew Smith                                " "\x2\x5" "Cursor Keys = Left & Right   " "\x2\x6" "Space = Jump   " "\x2\x3" "Pause/Tab = Pause   " "\x2\x4" "Alt = Tune On/Off                                " "\x2\x7" "Guide " "\x2\x5" "M" "\x2\x3" "i" "\x2\x2" "n" "\x2\x6" "e" "\x2\x4" "r" "\x2\x7" " Willy through 20 " "\x2\x2" "lethal " "\x2\x7" "caverns ...";
+#define TEXT_MM     "\x1\x0\x2\x2" "M" "\x2\x6" "A" "\x2\x4" "N" "\x2\x5" "I" "\x2\x3" "C " "\x2\x5" "M" "\x2\x3" "I" "\x2\x2" "N" "\x2\x6" "E" "\x2\x4" "R   "
+#define TEXT_KEYS   "\x2\x5" "Cursor Keys = Left & Right   " "\x2\x6" "Space = Jump   " "\x2\x3" "Pause/Tab = Pause   " "\x2\x4" "Alt = Tune On/Off" TEXT_32
+#define TEXT_GUIDE  "\x2\x7" "Guide " "\x2\x5" "M" "\x2\x3" "i" "\x2\x2" "n" "\x2\x6" "e" "\x2\x4" "r" "\x2\x7" " Willy through 20 " "\x2\x2" "lethal " "\x2\x7" "caverns ..."
+#define TEXT_32     "                                "
 
-static int      textPos, textEnd = ((int)sizeof(textTicker) - 50) * -8;
+static char     textTicker[2][307] =
+{
+    TEXT_MM "\x2\x7" "(C) Bug-Byte Ltd. 1983   By Matthew Smith" TEXT_32 TEXT_KEYS TEXT_GUIDE,
+    TEXT_MM "\x2\x7" "(C) Software Projects Ltd. 1983   By Matthew Smith" TEXT_32 TEXT_KEYS TEXT_GUIDE
+};
+
+static int      gameVersion = 0;
+static int      textPos, textEnd[2] = {248 * -8, 257 * -8};
 
 void Title_ScreenCopy()
 {
@@ -113,7 +123,7 @@ static void DoTitleTicker()
 {
     textPos -= 2;
 
-    if (textPos < textEnd)
+    if (textPos < textEnd[gameVersion])
     {
         gameDemo = 1;
         Action = DoStartGame;
@@ -124,7 +134,7 @@ static void DoTitleTicker()
 
 static void DoTitleDrawer()
 {
-    Video_WriteLarge(160 * WIDTH, textPos, textTicker);
+    Video_WriteLarge(160 * WIDTH, textPos, textTicker[gameVersion]);
 
     Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 }
@@ -160,6 +170,9 @@ static void DoTitleResponder()
 {
     if (gameInput == KEY_ENTER)
     {
+        gameVersion = System_IsKey(KEY_LSHIFT);
+        Robots_Version(gameVersion);
+
         gameDemo = 0;
         Action = DoStartGame;
     }
