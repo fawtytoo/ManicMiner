@@ -4,16 +4,8 @@
 
 static int      videoPixel[WIDTH * HEIGHT];
 
-static u8       charSet[128][10] =
+static u8       charSet[96][10] =
 {
-    {0}, // null
-    {0}, // paper
-    {0}, // ink
-    {0}, {0}, {0}, {0}, {0},
-    {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0},
-    {8, 3, 5, 3, 9, 3, 5, 3, 9}, // fringe
-    {0}, {0}, {0}, {0}, {0}, {0}, {0},
-    {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0},
     {3, 0, 0, 0},
     {2, 47, 0},
     {4, 3, 0, 3, 0},
@@ -252,7 +244,7 @@ int Video_TextWidth(char *text)
 
     for ( ; *text; text++)
     {
-        l += *charSet[(int)*text];
+        l += *charSet[*text - 32];
     }
 
     return l;
@@ -503,7 +495,7 @@ void Video_Write(int pos, char *text)
             continue;
         }
 
-        byte = charSet[(int)*text];
+        byte = charSet[*text - 32];
         width = *byte++;
 
         for (col = 0; col < width; col++, byte++, pos++)
@@ -524,12 +516,12 @@ void Video_CopyBytes(u8 *src)
     int     size, bit;
     u8      byte;
 
-    for (size = 0; size < 2048; size++, src++)
+    for (size = 0; size < 2048 + 256; size++, src++)
     {
         byte = *src;
-        for (bit = 0; bit < 8; bit++, byte >>= 1, pixel++)
+        for (bit = 0; bit < 8; bit++, byte <<= 1, pixel++)
         {
-            *pixel = byte & 1;
+            *pixel = byte >> 7;
         }
     }
 }
