@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Manic Miner
+Comment=Starring Miner Willy
+Icon=manicminer
+Exec=manicminer
+Terminal=false
+Categories=Game;
+StartupWMClass=manicminer
