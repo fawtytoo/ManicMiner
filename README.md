@@ -53,7 +53,10 @@ The keyboard numbers 1 to 0 are levels 1 to 10, and the Shift key changes
 that to levels 11 to 20. Then press Enter to change level. These key
 combinations need to be pressed simultaneously.
 
-# Windows build?
+# Linux
+## Debian
+- Install the packages `libsdl2-dev build-essential`
+- Then type `make` at a command prompt.
 
-Adding support for Windows is not planned. However, AukonDK of the [Jet Set Willy & Manic Miner community](https://jswmm.co.uk/)
-has kindly provided a 64bit of both Manic Miner & JetSet Willy for Windows available here: [MM and JSW ports to SDL2](https://jswmm.co.uk/topic/791-mm-and-jsw-ports-to-sdl2/).
+# Windows
+A pre-built 64bit executable can be found at [MM and JSW ports to SDL2](https://jswmm.co.uk/topic/791-mm-and-jsw-ports-to-sdl2/).
