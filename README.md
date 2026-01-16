@@ -53,10 +53,11 @@ The keyboard numbers 1 to 0 are levels 1 to 10, and the Shift key changes
 that to levels 11 to 20. Then press Enter to change level. These key
 combinations need to be pressed simultaneously.
 
-# Linux
+# Download
+- Linux users require installing the SDL2 library for your distro.
+- For Windows 7 and newer.
+
+# Linux compiling
 ## Debian
 - Install the packages `libsdl2-dev build-essential`
-- Then type `make` at a command prompt.
-
-# Windows
-A pre-built 64bit executable can be found at [MM and JSW ports to SDL2](https://jswmm.co.uk/topic/791-mm-and-jsw-ports-to-sdl2/).
+- Then type `make install` at a command prompt.
