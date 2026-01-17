@@ -847,6 +847,7 @@ static u8       *conveyRotate[2];
 static EVENT    DoWall;
 
 static int      levelItemCount;
+static int      itemTile[5];
 
 // this is used for tiles that transition to another tile: collapse, wall, etc
 static u8       *gfxSpace = (u8 [8])SPACE;
@@ -863,16 +864,10 @@ static void DoTile()
     Video_Tile(curPos, curTile->gfx, curTile->paper, curTile->ink, 8);
 }
 
-static void DoItem()
-{
-    curTile->ink = (curTile->ink & 3) + 3; // cycle the item colour
-    DoTile();
-}
-
 static void DoSpace()
 {
     curTile->data = 0; // needed for SPG beam
-    DoTile();
+    Video_Tile(curPos, gfxSpace, curTile->paper, curTile->ink, 8);
 }
 
 static void DoWallTop()
@@ -991,6 +986,23 @@ void Level_Drawer()
     }
 }
 
+void Level_ItemDrawer()
+{
+    int     i;
+    int     *tile = &itemTile[0];
+
+    for (i = 0; i < 5; i++, tile++)
+    {
+        curTile = &levelTile[*tile];
+        if (curTile->type == T_ITEM)
+        {
+            curPos = TILE2PIXEL(*tile) + 7;
+            DoTile();
+            curTile->ink = (curTile->ink & 3) + 3; // cycle the item colour
+        }
+    }
+}
+
 void Level_Init()
 {
     int     cell;
@@ -1001,6 +1013,7 @@ void Level_Init()
     int     dir;
 
     levelItemCount = 0;
+    itemTile[0] = itemTile[1] = itemTile[2] = itemTile[3] = itemTile[4] = 0;
 
     for (cell = 0; cell < 512; cell++, tile++, data++)
     {
@@ -1022,8 +1035,9 @@ void Level_Init()
         if (info->type == T_ITEM)
         {
             tile->ink = (levelItemCount & 3) + 3;
+            tile->DoDraw = DoSpace;
+            itemTile[levelItemCount] = cell;
             levelItemCount++;
-            tile->DoDraw = DoItem;
         }
         else if (info->type == T_COLLAPSE)
         {

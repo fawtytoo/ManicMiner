@@ -171,6 +171,7 @@ static void DoGameDrawer()
     Level_Drawer();
     Robots_Drawer();
     Miner_Drawer();
+    Level_ItemDrawer();
     Spg_Drawer();
     Portal_Drawer();
 }
