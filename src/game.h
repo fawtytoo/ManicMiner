@@ -81,9 +81,10 @@ void Miner_IncSeq(void);
 void Miner_DrawSeqSprite(int, u8, u8);
 
 // portal
+extern EVENT    Portal_Ticker;
 void Portal_Init(void);
 void Portal_Drawer(void);
-void DoPortalTicker(void);
+void Portal_Ready(void);
 
 // robots
 void Robots_Init(void);

@@ -117,12 +117,25 @@ static PORTAL       portalData[20] =
 static PORTAL       *portalThis;
 static int          portalTile, portalPos;
 static int          portalFlash;
+static int          portalReady;
 
-void DoPortalTicker()
+static void DoPortalTicker()
 {
     portalFlash ^= 1;
+}
 
-    if (portalTile != minerTile)
+void Portal_Ready()
+{
+    Portal_Ticker = DoPortalTicker;
+
+    portalReady = 1;
+}
+
+void Portal_Drawer()
+{
+    Video_Sprite(portalPos, portalThis->gfx, portalThis->colour[portalFlash], portalThis->colour[portalFlash ^ 1]);
+
+    if (portalReady == 0 || portalTile != minerTile)
     {
         return;
     }
@@ -137,11 +150,6 @@ void DoPortalTicker()
     }
 }
 
-void Portal_Drawer()
-{
-    Video_Sprite(portalPos, portalThis->gfx, portalThis->colour[portalFlash], portalThis->colour[portalFlash ^ 1]);
-}
-
 void Portal_Init()
 {
     portalThis = &portalData[gameLevel];
@@ -150,4 +158,6 @@ void Portal_Init()
     portalPos = portalThis->y * 8 * WIDTH + portalThis->x * 8;
 
     portalFlash = 0;
+
+    portalReady = 0;
 }

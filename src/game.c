@@ -150,7 +150,7 @@ void Game_GotItem(int tile)
         Robots_Eugene();
     }
 
-    Portal_Ticker = DoPortalTicker;
+    Portal_Ready();
 }
 
 static void DoGameDrawer()
