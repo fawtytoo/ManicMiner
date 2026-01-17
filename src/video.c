@@ -375,7 +375,6 @@ int Video_Miner(int pos, u16 *line, u8 ink)
             {
                 if (videoPixel[pixel] & B_ROBOT)
                 {
-                    Action = Die_Action;
                     die = 1;
                 }
 

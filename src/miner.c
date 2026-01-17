@@ -361,6 +361,7 @@ void DoMinerDrawer()
 
     if (Video_Miner((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk))
     {
+        Action = Die_Action;
         return;
     }
 
