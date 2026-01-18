@@ -11,11 +11,6 @@ ZX Spectrum version, written in C and using the SDL2 library.
 
 Game play is 100% identical except for the following differences:
 
-- Level 16 has the item below the portal slightly lower down and the conveyor
-has a gap. This forces the player to utilise the left side of the level to get
-the item and to return to the portal. Judging by the collapsible blocks on the
-left, this may have been what Matthew Smith originally envisioned.
-
 - In level 19 "Solar Power Generator", air depletes by 8 points if Willy is hit
 by the light beam unless his Y position is offset and the light beam strikes him
 vertically, then he loses 12 points of air. That's how the original game works.
