@@ -86,6 +86,7 @@ extern EVENT    Portal_Ticker;
 void Portal_Init(void);
 void Portal_Drawer(void);
 void Portal_Ready(void);
+void Portal_SwordFish(void);
 
 // robots
 void Robots_Init(void);

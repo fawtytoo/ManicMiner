@@ -19,10 +19,9 @@ static void DoVictoryInit()
 {
     System_Border(0);
 
-    Portal_Init();
     Level_Drawer();
     Robots_Drawer();
-    Portal_Drawer();
+    Portal_SwordFish();
 
     Video_SpriteBlend(24 * WIDTH + 19 * 8, minerSprite, 0x7);
 

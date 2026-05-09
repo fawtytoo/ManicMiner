@@ -114,6 +114,19 @@ static PORTAL       portalData[20] =
     }
 };
 
+static u16          swordFish[3][16] =
+{
+    {
+          672,  1347,  8164, 29695, 62200,  7999, 65508, 16323,     0,     0,     0,     0,     0,     0,     0,     0
+    },
+    {
+            0,     0,     0,     0,     0,     0,     0,     0,     0,   256, 14592, 28416, 20736, 32512, 14592,   256
+    },
+    {
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0,   252,     2,     1,   254,   252,     0
+    }
+};
+
 static PORTAL       *portalThis;
 static int          portalTile, portalPos;
 static int          portalFlash;
@@ -129,6 +142,13 @@ void Portal_Ready()
     Portal_Ticker = DoPortalTicker;
 
     portalReady = 1;
+}
+
+void Portal_SwordFish()
+{
+    Video_SpriteBlend(portalPos, swordFish[0], 0x05);
+    Video_SpriteBlend(portalPos, swordFish[1], 0x06);
+    Video_SpriteBlend(portalPos, swordFish[2], 0x07);
 }
 
 void Portal_Drawer()
