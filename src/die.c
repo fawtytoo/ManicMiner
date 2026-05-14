@@ -22,21 +22,24 @@ static void DoDieTicker()
         return;
     }
 
+    gameLives--;
+
     if (gameLives == 0)
     {
         Action = Gameover_Action;
         return;
     }
 
-    Video_Sprite(LIVES + (gameLives - 1) * 16, dieBlank, 0x0, 0x0); // blank frame
+    if (gameLives < 10)
+    {
+        Video_Sprite(LIVES + (gameLives - 1) * 16, dieBlank, 0x0, 0x0); // blank frame
+    }
 
     Action = Game_Action;
 }
 
 static void DoDieInit()
 {
-    gameLives--;
-
     dieLevel = 15; // make each colour last 2 frames
 
     Video_LevelPaperFill(0x0);

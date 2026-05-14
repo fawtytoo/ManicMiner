@@ -44,9 +44,9 @@ void Game_DrawLives()
 {
     int l, pos = LIVES;
 
-    for (l = 0; l < gameLives - 1; l++, pos += 16)
+    for (l = 1; l < gameLives && l < 10; l++, pos += 16)
     {
-        Miner_DrawSeqSprite(pos, 0x0, 0x5);
+        Miner_DrawSeqSprite(pos, 0x0, gameLives > 10 && l == 9 ? 0x09 : 0x5);
     }
 }
 
