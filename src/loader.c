@@ -1,3 +1,5 @@
+#include "../include.h"
+
 #include "misc.h"
 #include "video.h"
 
@@ -46,7 +48,6 @@ static void DoLoaderTicker()
 
 static void DoLoaderInit()
 {
-    Video_CopyColour(loaderColour[0], 256, 256);
     Video_Write(184 * WIDTH, "\x2\x7" "fawtytoo");
     Video_Write(184 * WIDTH + WIDTH - Video_TextWidth(BUILD), "\x2\x1" BUILD);
 
