@@ -5,6 +5,8 @@
 Originally written in 1983 by Matthew Smith. This port is based on the original
 ZX Spectrum version, written in C and using the SDL2 library.
 
+- Can be played using keyboard or joystick
+
 ![Manic Miner loading screen](images/ManicMiner.gif)
 
 ## Game play
