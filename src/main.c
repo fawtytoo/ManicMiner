@@ -30,6 +30,7 @@ static SDL_Rect             sdlViewport;
 static SDL_AudioDeviceID    sdlAudio;
 
 static const Uint8          *keyState;
+static int                  joyState[3];
 
 const COLOUR                *sysBorder = &videoColour[0];
 
@@ -84,6 +85,21 @@ static void SdlCallback(void *unused, Uint8 *stream, int length)
     }
 }
 
+int System_IsJoyLeft()
+{
+    return joyState[0];
+}
+
+int System_IsJoyRight()
+{
+    return joyState[1];
+}
+
+int System_IsJoyFire()
+{
+    return joyState[2];
+}
+
 int System_IsKey(int key)
 {
     return keyState[SDL_GetScancodeFromKey(sdlKey[key])];
@@ -103,6 +119,34 @@ static int System_GetEvent()
     if (event.type == SDL_QUIT)
     {
         DoQuit();
+    }
+
+    if (event.type == SDL_JOYBUTTONDOWN)
+    {
+        joyState[2] = 1;
+        gameInput = KEY_ELSE;
+    }
+    else if (event.type == SDL_JOYBUTTONUP)
+    {
+        joyState[2] = 0;
+    }
+    if (event.type == SDL_JOYAXISMOTION && event.jaxis.axis == 0)
+    {
+        if (event.jaxis.value < -255)
+        {
+            joyState[0] = 1;
+            joyState[1] = 0;
+        }
+        else if (event.jaxis.value > 255)
+        {
+            joyState[0] = 0;
+            joyState[1] = 1;
+        }
+        else
+        {
+            joyState[0] = 0;
+            joyState[1] = 0;
+        }
     }
 
     if (event.type != SDL_KEYDOWN)
@@ -180,7 +224,7 @@ int main()
     TIMER           timerFrame;
     int             frame = 0;
 
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK);
 
     SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
 
@@ -209,6 +253,9 @@ int main()
     SDL_PauseAudioDevice(sdlAudio, 0);
 
     keyState = SDL_GetKeyboardState(NULL);
+
+    SDL_JoystickEventState(SDL_ENABLE);
+    SDL_JoystickOpen(0);
 
     Timer_Set(&timerFrame, TICKRATE, mode.refresh_rate);
     Timer_Set(&audioTimer, TICKRATE, SAMPLERATE);

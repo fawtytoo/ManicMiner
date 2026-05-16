@@ -294,12 +294,12 @@ void DoMinerTicker()
 
             i = 0;
 
-            if (System_IsKey(KEY_LEFT) || conveyDir == C_LEFT)
+            if (System_IsKey(KEY_LEFT) || System_IsJoyLeft() || conveyDir == C_LEFT)
             {
                 i += 1;
             }
 
-            if (System_IsKey(KEY_RIGHT) || conveyDir == C_RIGHT)
+            if (System_IsKey(KEY_RIGHT)|| System_IsJoyRight() || conveyDir == C_RIGHT)
             {
                 i += 2;
             }
@@ -333,7 +333,7 @@ void DoMinerTicker()
                 }
             }
 
-            if (System_IsKey(KEY_JUMP))
+            if (System_IsKey(KEY_JUMP) || System_IsJoyFire())
             {
                 minerAir = 1;
                 jumpStage = 0;

@@ -195,7 +195,7 @@ static void DoTitleInit()
 
 static void DoTitleResponder()
 {
-    if (gameInput == KEY_ENTER)
+    if (gameInput == KEY_ENTER || System_IsJoyFire())
     {
         gameVersion = System_IsKey(KEY_LSHIFT);
         Robots_Version(gameVersion);

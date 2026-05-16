@@ -53,3 +53,6 @@ int Video_Viewport(int, int, int *, int *, int *, int *);
 void System_Border(int);
 void System_SetPixel(int, int);
 int System_IsKey(int);
+int System_IsJoyLeft(void);
+int System_IsJoyRight(void);
+int System_IsJoyFire(void);
