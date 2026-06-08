@@ -16,8 +16,6 @@
 //     misrepresented as being the original software.
 //  3. This notice may not be removed or altered from any source distribution.
 
-#include "../include.h"
-
 #include "misc.h"
 #include "video.h"
 
@@ -67,7 +65,7 @@ static void DoLoaderTicker()
 static void DoLoaderInit()
 {
     Video_Write(184 * WIDTH, "\x2\x7" "fawtytoo");
-    Video_Write(184 * WIDTH + WIDTH - Video_TextWidth(BUILD), "\x2\x1" BUILD);
+    Video_Write(184 * WIDTH + WIDTH - Video_TextWidth(__DATE__), "\x2\x1" __DATE__);
 
     Timer_Set(&loaderTimer, 3, TICKRATE);
 
