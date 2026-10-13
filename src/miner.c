@@ -113,26 +113,11 @@ u8              minerX, minerY;
 int             minerTile, minerAlign;
 
 // sprite sequencing -----------------------------------------------------------
-static u8           minerSeqIndex;
-static TIMER        minerSeqTimer;
-
 static const int    minerSequence[8] = {0, 1, 2, 3, 7, 6, 5, 4};
 
-void Miner_SetSeq(int index, int speed)
+void Miner_DrawSprite(int pos, u8 paper, u8 ink, int index)
 {
-    Timer_Set(&minerSeqTimer, 1, speed);
-    minerSeqIndex = index;
-}
-
-void Miner_IncSeq()
-{
-    minerSeqIndex += Timer_Update(&minerSeqTimer);
-    minerSeqIndex &= 7;
-}
-
-void Miner_DrawSeqSprite(int pos, u8 paper, u8 ink)
-{
-    Video_Sprite(pos, minerSprite[minerSequence[minerSeqIndex]], paper, ink);
+    Video_Sprite(pos, minerSprite[minerSequence[index & 7]], paper, ink);
 }
 
 // -----------------------------------------------------------------------------

@@ -62,11 +62,9 @@ void Game_DrawLives()
 {
     int l, pos = LIVES;
 
-    Miner_IncSeq();
-
     for (l = 1; l < gameLives && l < 10; l++, pos += 16)
     {
-        Miner_DrawSeqSprite(pos, 0x0, gameLives > 10 && l == 9 ? 0x09 : 0x5);
+        Miner_DrawSprite(pos, 0x0, gameLives > 10 && l == 9 ? 0x09 : 0x5, musicClock >> 4);
     }
 }
 
@@ -336,6 +334,8 @@ static void DoGameResponder()
 
 void Game_GameReset()
 {
+    Audio_Music(MUS_GAME, MUS_STOP);
+
     gameLives = 3;
     gameLevel = 0;
     gameScore = 0;
@@ -345,7 +345,6 @@ void Game_GameReset()
     Game_ExtraLife = DoNothing;
     Game_DrawHiScore();
 
-    Miner_SetSeq(0, 20);
     Game_DrawLives();
 
     if (cheatEnabled)
@@ -363,8 +362,6 @@ void Game_GameReset()
         Miner_Ticker = DoNothing;
         Miner_Drawer = DoNothing;
     }
-
-    Audio_Music(MUS_GAME, MUS_STOP);
 }
 
 void Game_ChangeLevel()

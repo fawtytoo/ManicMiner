@@ -151,8 +151,6 @@ static void DoStartGame()
 static void DoTitleTicker()
 {
     textPos += 2;
-
-    Miner_IncSeq();
 }
 
 static void DoTitleDrawer()
@@ -163,7 +161,7 @@ static void DoTitleDrawer()
         Action = DoStartGame;
     }
 
-    Miner_DrawSeqSprite(MINER, 0xa, 0x7);
+    Miner_DrawSprite(MINER, 0xa, 0x7, textPos >> 4);
 }
 
 static void DoTitleInit()
@@ -183,8 +181,7 @@ static void DoTitleInit()
 
     textPos = 0;
 
-    Miner_SetSeq(0, 8);
-    Miner_DrawSeqSprite(MINER, 0xa, 0x7);
+    Miner_DrawSprite(MINER, 0xa, 0x7, 0);
 
     Audio_Music(MUS_TITLE, MUS_PLAY);
 

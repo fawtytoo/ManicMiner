@@ -96,9 +96,7 @@ extern int  minerTile, minerAlign;
 void Miner_Init(void);
 void DoMinerTicker(void);
 void DoMinerDrawer(void);
-void Miner_SetSeq(int, int);
-void Miner_IncSeq(void);
-void Miner_DrawSeqSprite(int, u8, u8);
+void Miner_DrawSprite(int, u8, u8, int);
 
 // portal
 extern EVENT    Portal_Ticker;

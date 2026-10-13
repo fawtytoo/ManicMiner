@@ -33,6 +33,7 @@ enum
 };
 
 extern int  audioMusicPlaying;
+extern int      musicClock;
 
 void Audio_Output(short [2]);
 void Audio_MusicEvent(void);

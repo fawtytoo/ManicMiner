@@ -414,7 +414,8 @@ static SFX      sfxInfo[NSFX] =
 };
 
 static int      musicIndex = 0;
-static int      musicClock = 0, musicDelta;
+int             musicClock = 0;
+static int      musicDelta;
 static u8       *curMusic;
 
 static int      musicChannels = 0;
