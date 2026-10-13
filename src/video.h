@@ -26,7 +26,7 @@
 void Video_CopyColour(u8 *, int, int);
 void Video_CopyBytes(u8 *);
 void Video_Write(int, char *);
-void Video_WriteLarge(int, int, char *);
+int Video_WriteLarge(int, int, char *);
 void Video_Sprite(int, u16 *, u8, u8);
 int Video_DrawSprite(int, u16 *, u8);
 int Video_Tile(int, u8 *, u8, u8, int);

@@ -126,7 +126,7 @@ static char     textTicker[2][307] =
 };
 
 static int      gameVersion = 0;
-static int      textPos, textEnd[2] = {248 * -8, 257 * -8};
+static int      textPos;
 
 void Title_ScreenCopy()
 {
@@ -150,20 +150,18 @@ static void DoStartGame()
 
 static void DoTitleTicker()
 {
-    textPos -= 2;
-
-    if (textPos < textEnd[gameVersion])
-    {
-        gameDemo = 1;
-        Action = DoStartGame;
-    }
+    textPos += 2;
 
     Miner_IncSeq();
 }
 
 static void DoTitleDrawer()
 {
-    Video_WriteLarge(160 * WIDTH, textPos, textTicker[gameVersion]);
+    if (Video_WriteLarge(160 * WIDTH, WIDTH - textPos, textTicker[gameVersion]))
+    {
+        gameDemo = 1;
+        Action = DoStartGame;
+    }
 
     Miner_DrawSeqSprite(MINER, 0xa, 0x7);
 }
@@ -183,7 +181,7 @@ static void DoTitleInit()
 
     Video_WriteLarge(KEYBOARD, 4, "\x1\x0\x2\x7\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c\x1a\x1b\x1b\x1c\x1a\x1b\x1c");
 
-    textPos = WIDTH;
+    textPos = 0;
 
     Miner_SetSeq(0, 8);
     Miner_DrawSeqSprite(MINER, 0xa, 0x7);

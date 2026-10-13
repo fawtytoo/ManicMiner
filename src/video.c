@@ -442,7 +442,7 @@ static int TextCode(char *text)
     return 0;
 }
 
-void Video_WriteLarge(int pos, int x, char *text)
+int Video_WriteLarge(int pos, int x, char *text)
 {
     int     col, bit;
     u16     *byte, line;
@@ -471,6 +471,8 @@ void Video_WriteLarge(int pos, int x, char *text)
             }
         }
     }
+
+    return x < 0;
 }
 
 void Video_Write(int pos, char *text)
