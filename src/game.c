@@ -192,6 +192,11 @@ static void DoGameDrawer()
     Level_ItemDrawer();
     Spg_Drawer();
     Portal_Drawer();
+
+    if (gameAir == 0)
+    {
+        Action = Die_Action;
+    }
 }
 
 static void DoGameDrawOnce()
@@ -217,10 +222,6 @@ static void DoGameTicker()
     Portal_Ticker();
 
     Game_ReduceAir(1);
-    if (gameAir == 0)
-    {
-        Action = Die_Action;
-    }
 
     if (gameDemo == 0)
     {
