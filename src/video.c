@@ -383,11 +383,13 @@ int Video_Miner(int pos, u16 *line, u8 ink)
     u16     word;
     int     die = 0;
 
+    pos += 15;
+
     for (row = 0; row < 16; row++, pos += WIDTH, line++)
     {
         pixel = pos;
         word = *line;
-        for (bit = 0; bit < 16; bit++, pixel++, word >>= 1)
+        for (bit = 0; bit < 16; bit++, pixel--, word >>= 1)
         {
             if (word & 1)
             {
