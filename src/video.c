@@ -404,29 +404,6 @@ int Video_DrawSprite(int pos, u16 *line, u8 ink)
     return contact > 0;
 }
 
-void Video_SpriteBlend(int pos, u16 *line, u8 ink)
-{
-    int     row, bit;
-    int     pixel;
-    u16     word;
-
-    pos += 15;
-
-    for (row = 0; row < 16; row++, pos += WIDTH, line++)
-    {
-        pixel = pos;
-        word = *line;
-        for (bit = 0; bit < 16; bit++, pixel--, word >>= 1)
-        {
-            if (word & 1)
-            {
-                videoPixel[pixel] |= B_ROBOT | 1;
-                System_SetPixel(pixel, ink);
-            }
-        }
-    }
-}
-
 void Video_Sprite(int pos, u16 *line, u8 paper, u8 ink)
 {
     int     row, bit;

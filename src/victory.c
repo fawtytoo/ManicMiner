@@ -41,7 +41,7 @@ static void DoVictoryInit()
     Robots_Drawer();
     Portal_SwordFish();
 
-    Video_SpriteBlend(24 * WIDTH + 19 * 8, minerSprite, 0x7);
+    Video_DrawSprite(24 * WIDTH + 19 * 8, minerSprite, 0x7);
 
     victoryTimer = 50 * 9;
 

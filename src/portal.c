@@ -164,9 +164,9 @@ void Portal_Ready()
 
 void Portal_SwordFish()
 {
-    Video_SpriteBlend(portalPos, swordFish[0], 0x05);
-    Video_SpriteBlend(portalPos, swordFish[1], 0x06);
-    Video_SpriteBlend(portalPos, swordFish[2], 0x07);
+    Video_DrawSprite(portalPos, swordFish[0], 0x05);
+    Video_DrawSprite(portalPos, swordFish[1], 0x06);
+    Video_DrawSprite(portalPos, swordFish[2], 0x07);
 }
 
 void Portal_Drawer()
