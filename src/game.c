@@ -62,6 +62,8 @@ void Game_DrawLives()
 {
     int l, pos = LIVES;
 
+    Miner_IncSeq();
+
     for (l = 1; l < gameLives && l < 10; l++, pos += 16)
     {
         Miner_DrawSeqSprite(pos, 0x0, gameLives > 10 && l == 9 ? 0x09 : 0x5);
@@ -203,11 +205,6 @@ static void DoGameDrawOnce()
 
 static void DoGameTicker()
 {
-    if (gameMusic == MUS_PLAY)
-    {
-        Miner_IncSeq();
-    }
-
     gameFrame = Timer_Update(&gameTimer);
     if (gameFrame == 0)
     {

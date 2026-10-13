@@ -36,6 +36,7 @@ void Game_CheckHighScore(void);
 void Game_GotItem(int);
 void Game_ChangeLevel(void);
 void Game_Pause(int);
+void Game_DrawLives(void);
 
 // cheat
 extern int      cheatEnabled;

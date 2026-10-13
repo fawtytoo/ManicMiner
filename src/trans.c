@@ -30,6 +30,10 @@ static void DoTransDrawer()
         Game_DrawAir();
         Game_ExtraLife();
     }
+    else if (audioMusicPlaying)
+    {
+        Game_DrawLives();
+    }
 
     if (transLevel > 0)
     {
