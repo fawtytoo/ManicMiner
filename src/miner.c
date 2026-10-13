@@ -377,11 +377,7 @@ void DoMinerDrawer()
     int     tile, adj;
     int     i;
 
-    if (Video_Miner((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk))
-    {
-        Action = Die_Action;
-        return;
-    }
+    Video_DrawSprite((minerY << 8) | minerX, minerSprite[(minerDir << 2) | minerFrame], minerInk);
 
     tile = minerTile;
     for (i = 0, adj = 1; i < minerAlign; i++, tile += adj, adj ^= 30)

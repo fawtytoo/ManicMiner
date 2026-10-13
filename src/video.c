@@ -368,7 +368,7 @@ int Video_Tile(int pos, u8 *gfx, u8 paper, u8 ink, int rows)
         byte = *gfx;
         for (bit = 0; bit < 8; bit++, pixel--, byte >>= 1)
         {
-            videoPixel[pixel] = byte & B_LEVEL;
+            videoPixel[pixel] = byte & 1;
             System_SetPixel(pixel, colour[byte & 1]);
         }
     }
@@ -376,12 +376,12 @@ int Video_Tile(int pos, u8 *gfx, u8 paper, u8 ink, int rows)
     return pos;
 }
 
-int Video_Miner(int pos, u16 *line, u8 ink)
+int Video_DrawSprite(int pos, u16 *line, u8 ink)
 {
     int     row, bit;
     int     pixel;
     u16     word;
-    int     die = 0;
+    int     contact = 0;
 
     pos += 15;
 
@@ -393,18 +393,15 @@ int Video_Miner(int pos, u16 *line, u8 ink)
         {
             if (word & 1)
             {
-                if (videoPixel[pixel] & B_ROBOT)
-                {
-                    die = 1;
-                }
+                contact += videoPixel[pixel];
 
-                videoPixel[pixel] |= B_MINER | 1;
+                videoPixel[pixel] = 1;
                 System_SetPixel(pixel, ink);
             }
         }
     }
 
-    return die;
+    return contact > 0;
 }
 
 void Video_SpriteBlend(int pos, u16 *line, u8 ink)

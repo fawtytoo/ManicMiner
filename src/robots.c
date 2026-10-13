@@ -893,7 +893,10 @@ void Robots_Ticker()
 
 static void DoRobotDraw()
 {
-    Video_SpriteBlend((curRobot->y << 8) | curRobot->x, curRobot->gfx + (curRobot->frame & curRobot->nframes) * 16, curRobot->ink);
+    if (Video_DrawSprite((curRobot->y << 8) | curRobot->x, curRobot->gfx + (curRobot->frame & curRobot->nframes) * 16, curRobot->ink))
+    {
+        Action = Die_Action;
+    }
 }
 
 void Robots_Drawer()
