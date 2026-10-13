@@ -42,6 +42,7 @@ int             gameTicks;
 int             gameDemo = 1;
 int             gameLives;
 int             gameAir, gameAirOld;
+static TIMER    timerAir;
 
 EVENT           Game_ExtraLife = DoNothing;
 EVENT           Game_DrawAir = DoNothing;
@@ -81,7 +82,10 @@ static void DoDrawAir()
 
 void Game_ReduceAir(int amount)
 {
-    gameAir -= amount;
+    while (amount--)
+    {
+        gameAir -= Timer_Update(&timerAir);
+    }
 
     if (gameAir < 0)
     {
@@ -285,8 +289,9 @@ static void DoGameInit()
     }
 
     gameAirOld = 224;
-    gameAir = airData[gameLevel] * 8;
+    gameAir = 224 * 8;
     Game_DrawAir = DoNothing;
+    Timer_Set(&timerAir, gameAir, airData[gameLevel] * 8);
 
     gameTicks = 0;
 
