@@ -224,7 +224,7 @@ typedef struct
     u8          ink;
     int         nframes; // 3 or 7 = 4 frames or 8 frames
     int         frame;
-    int         tile;
+    int         tile, tilec;
     u16         *gfx;
 }
 ROBOT;
@@ -711,8 +711,6 @@ static ROBOT    robotStart[20][8] =
 
 static u16      robotAlt[2][2][8][16] = {{{ROBOT_17_2}, {ROBOT_18_2}}, {{ROBOT_SP_1}, {ROBOT_SP_2}}};
 
-static int      robotAlign[8] = {4, 6, 6, 6, 6, 6, 6, 6};
-
 static ROBOT    robotThis[8], *curRobot;
 
 void DoRobotSpg(void)
@@ -720,7 +718,7 @@ void DoRobotSpg(void)
     int     count;
     int     tile = curRobot->tile, adj = 1;
 
-    for (count = 0; count < robotAlign[curRobot->y & 7]; count++, tile += adj, adj ^= 30)
+    for (count = 0; count < curRobot->tilec; count++, tile += adj, adj ^= 30)
     {
         Level_SetSpgTile(tile, B_ROBOT);
     }
@@ -787,10 +785,8 @@ static void DoRobotUp()
     }
     else
     {
-        if ((pos & 120) < (curRobot->y & 120))
-        {
-            curRobot->tile -= 32;
-        }
+        curRobot->tile -= (curRobot->y / 8 - pos / 8) * 32;
+        curRobot->tilec = ((pos & 7) + 23) / 8 * 2;
 
         curRobot->y = pos;
     }
@@ -804,10 +800,8 @@ static void DoRobotDown()
 
     if (pos < curRobot->max)
     {
-        if ((pos & 120) > (curRobot->y & 120))
-        {
-            curRobot->tile += 32;
-        }
+        curRobot->tile += (pos / 8 - curRobot->y / 8) * 32;
+        curRobot->tilec = ((pos & 7) + 23) / 8 * 2;
 
         curRobot->y = pos;
     }
@@ -952,6 +946,7 @@ void Robots_Init()
             {
                 robot->DoSpg = DoRobotSpg;
                 robot->tile = start->y * 32 + start->x;
+                robot->tilec = 4;
             }
         }
 
