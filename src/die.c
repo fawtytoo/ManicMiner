@@ -35,8 +35,9 @@ static void DoDieDrawer()
 
 static void DoDieTicker()
 {
-    if (dieLevel-- > 0)
+    if (dieLevel > 0)
     {
+        dieLevel--;
         return;
     }
 
